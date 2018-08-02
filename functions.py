@@ -38,7 +38,7 @@ def photometry(image2d, cen_x, cen_y, index = 0, shape = 'Circ', rad = None, r_i
         aperture = RectangularAnnulus((cen_x[index], cen_y[index]), w_in = w_in, w_out = w_out, h_out = h_out, theta = ang)
             
     phot_table = aperture_photometry(image2d, aperture, mask = mask)
-    flux = phot_table[0][0]
+    flux = phot_table['aperture_sum']
     return flux, aperture
 
 
