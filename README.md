@@ -1,2 +1,2 @@
 # IRAC_photometry
-Reducing callibrator stars for IRAC photometric system.
+Reducing IRAC callibrator stars for scaling JWST measurements.
