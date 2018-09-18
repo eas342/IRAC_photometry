@@ -1,13 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import sys, pdb, glob, tqdm
+import sys, pdb, glob
+from tqdm import tqdm
 from photutils import CircularAperture, CircularAnnulus, aperture_photometry
 from astropy.io import fits, ascii
 from astropy.table import Table, Column
 from astropy.modeling import models, fitting
-from photutils.datasets import make_4gaussians_image
-from photutils import centroid_2dg
-
+from astropy.wcs import WCS
+from astropy import units as u
+from astropy.coordinates import SkyCoord
 
 
 def photometry(image2d, cen_x, cen_y, index = 0, shape = 'Circ', rad = None, r_in = None, r_out = None, ht = None, wid = None, w_in = None, w_out = None, h_out = None, ang = 0.0):
@@ -90,67 +91,70 @@ def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, imag
 
 
 
-def single_target_phot():
+def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
     """
     For a set of images.
     """
     
-    #Issues list
-    crd_conversion = []
-    centroiding    = []
-    bad_cen_guess  = []
-    not_in_fov     = []
-
-    data = Table(names = ('File#','ACenX', 'ACenY', 'FCenX', 'FCenY', 'Time[MJD]', 'Raw_Flux', 'Bkg_Flux', 'Res_Flux'), 
-                 dtype = ('S25', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8'))
+    data = Table(names = ('File#', 'Coord Conversion Issue', 'Centroiding Issue', 'Bad Center Guess', 'Not In FOV', 'Xc', 'Yc', 'Fx', 'Fy', 'Time[MJD]', 'Raw_Flux', 'Bkg_Flux', 'Res_Flux'), 
+                 dtype = ('S25', 'S5', 'S5', 'S5', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8'))
 
 
-    for fn in tqdm(fnames):
-
+    for i, fn in tqdm(enumerate(fnames)):
+        
+        #Issues list
+        #Initializing values to False
+        (crd_conversion, centroiding, bad_cen_guess, not_in_fov) = ('X', 'X', 'X', 'X')
+        
+        #setting default value to NaN
+        (raw_flux, bkg_flux, res_flux, cenX, cenY, fx, fy) = (np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
+        
         hdu    = fits.open(fn)
         header = hdu[0].header
         image  = hdu[0].data
         hdu.close()
 
-        fnum = fn[a:b]
         Time = header['MJD_OBS']
+        
 
         try:
             w = WCS(header)
-            pix = sky.to_pixel(w)
+            pix = targetCrd.to_pixel(w)
         except:
-            crd_conversion.append(fnum)
+            crd_conversion = 'O'
             continue
 
         if (pix[0]>0) & (pix[0]<256) & (pix[1]>0) & (pix[1]<256):
-
+         
             try:
-                cenX, cenY = func.gen_center_g2d(pix[0], pix[1], 7, 5, 4, 4, 0, image)
+                cenX, cenY, fx, fy = gen_center_g2d(pix[0], pix[1], 7, 5, 4, 4, 0, image)
             except:
-                centroiding.append(fnum)
+                centroiding = 'O'
                 continue
 
             if (np.abs(cenX - pix[0]) <= 2) & (np.abs(cenY-pix[1]) <= 2):
-
                 try:
                     # Extracting raw flux
-                    raw_flux, src_ap = func.photometry(image, [cenX], [cenY], rad = 10)
+                    raw_flux, src_ap = photometry(image, [cenX], [cenY], rad = src_r)
 
                     # Extrating a mean background flux
-                    bkg, bkg_ap = func.photometry(image, [cenX], [cenY], shape = 'CircAnn', r_in = 12, r_out = 20)
+                    bkg, bkg_ap = photometry(image, [cenX], [cenY], shape = 'CircAnn', r_in = bkg_rIn, r_out = bkg_rOut)
                     bkg_mean = bkg/bkg_ap.area()
                     bkg_flux = bkg_mean*src_ap.area()
 
                     # Subtracting background
                     res_flux  = raw_flux - bkg_flux
-
-                    data.add_row([fnum, pix[0], pix[1], cenX, cenY, Time, raw_flux, bkg_flux, res_flux])
+                    
 
                 except:
                     continue
 
             else:
-                bad_cen_guess.append(fnum)
+                bad_cen_guess = 'O'
 
         else:
-            not_in_fov.append(fnum)
+            not_in_fov = 'O'
+            
+        data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
+        
+    return data, header
