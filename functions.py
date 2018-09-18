@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import sys, pdb, glob
+import sys, pdb, glob, tqdm
 from photutils import CircularAperture, CircularAnnulus, aperture_photometry
 from astropy.io import fits, ascii
 from astropy.table import Table, Column
@@ -42,6 +42,7 @@ def photometry(image2d, cen_x, cen_y, index = 0, shape = 'Circ', rad = None, r_i
     return flux, aperture
 
 
+
 def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, image, model_plotting = False):
     
     """
@@ -67,6 +68,8 @@ def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, imag
     g1 = fit_g(g,x_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],y_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],image[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width])
     new_xCen = g1.x_mean[0]
     new_yCen = g1.y_mean[0]
+    fwhm_x   = g1.x_fwhm
+    fwhm_y   = g1.y_fwhm
     
     if model_plotting == True:
         
@@ -83,4 +86,71 @@ def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, imag
         plt.title('Residual')
     
     #Results
-    return new_xCen, new_yCen
+    return new_xCen, new_yCen, fwhm_x, fwhm_y
+
+
+
+def single_target_phot():
+    """
+    For a set of images.
+    """
+    
+    #Issues list
+    crd_conversion = []
+    centroiding    = []
+    bad_cen_guess  = []
+    not_in_fov     = []
+
+    data = Table(names = ('File#','ACenX', 'ACenY', 'FCenX', 'FCenY', 'Time[MJD]', 'Raw_Flux', 'Bkg_Flux', 'Res_Flux'), 
+                 dtype = ('S25', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8'))
+
+
+    for fn in tqdm(fnames):
+
+        hdu    = fits.open(fn)
+        header = hdu[0].header
+        image  = hdu[0].data
+        hdu.close()
+
+        fnum = fn[a:b]
+        Time = header['MJD_OBS']
+
+        try:
+            w = WCS(header)
+            pix = sky.to_pixel(w)
+        except:
+            crd_conversion.append(fnum)
+            continue
+
+        if (pix[0]>0) & (pix[0]<256) & (pix[1]>0) & (pix[1]<256):
+
+            try:
+                cenX, cenY = func.gen_center_g2d(pix[0], pix[1], 7, 5, 4, 4, 0, image)
+            except:
+                centroiding.append(fnum)
+                continue
+
+            if (np.abs(cenX - pix[0]) <= 2) & (np.abs(cenY-pix[1]) <= 2):
+
+                try:
+                    # Extracting raw flux
+                    raw_flux, src_ap = func.photometry(image, [cenX], [cenY], rad = 10)
+
+                    # Extrating a mean background flux
+                    bkg, bkg_ap = func.photometry(image, [cenX], [cenY], shape = 'CircAnn', r_in = 12, r_out = 20)
+                    bkg_mean = bkg/bkg_ap.area()
+                    bkg_flux = bkg_mean*src_ap.area()
+
+                    # Subtracting background
+                    res_flux  = raw_flux - bkg_flux
+
+                    data.add_row([fnum, pix[0], pix[1], cenX, cenY, Time, raw_flux, bkg_flux, res_flux])
+
+                except:
+                    continue
+
+            else:
+                bad_cen_guess.append(fnum)
+
+        else:
+            not_in_fov.append(fnum)
