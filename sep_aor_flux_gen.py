@@ -10,29 +10,35 @@ from astropy.coordinates import SkyCoord
 from datetime import datetime
 
 
-AORnames = np.sort(glob.glob('/data1/phot_cal/spitzer/hd165459/cryo/r*/'))
-AORs = []
-
-for aor in AORnames:
-    fnames = np.sort(glob.glob(aor + 'ch1/bcd/*_bcd.fits'))
-    AORs.append(fnames)
-
 #Defining general constants
 #---------------------------
 
+print '\n', 'Please input the following arguments and seperate them with a comma-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n', '4. Source Aperture Radius in px (eg. 10) \n', '5. Inner Background Radius in px (eg. 12) \n', '6. Outer Background Radius in px (eg. 20) \n', '7. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '8. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '9. Sigma Clipping Number (e.g. 10) [optional argument]', '\n'
+
+constants = raw_input('Input the parameters listed above: ').split(',')
+
+                      
+AORnames = np.sort(glob.glob(constants[0]))
+AORs = []
+
+for aor in AORnames:
+    fnames = np.sort(glob.glob(aor + 'ch1/' + constants[1] + '/*_' + constants[1] + '.fits'))
+    AORs.append(fnames)
+                      
+                      
 #Provide proper sky coordinates in hms
 # '18 02 30.7410086899 +58 37 38.157415821' for HD 165459
 # '17 24 52.2772360943 +60 25 50.780790994' for BD +60 1753
-sky = SkyCoord('18 02 30.7410086899 +58 37 38.157415821', unit=(u.hourangle, u.deg))
+sky = SkyCoord(constants[2], unit=(u.hourangle, u.deg))
 
-r, rIn, rOut = 10, 12, 20
+r, rIn, rOut = int(constants[3]), int(constants[4]), int(constants[5])
 
 # Find the aperture correction factor from the following link:
 # https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/
 # From the table at the end of that link, select your value accoring to your aperture size and channel
-ap_corr = 1.000
+ap_corr = float(constants[6])
 
-pixLen  = 1.221 #arcsec
+pixLen  = float(constants[7]) #arcsec
 pixArea = pixLen**2 #arcsec^2
 pixArea = pixArea/(206265**2) #Steradian
 
@@ -108,7 +114,7 @@ ascii.write(cum_data, 'Reduction_Data_&_Logs/run1_img_data.csv', delimiter = ','
 log = open('Reduction_Data_&_Logs/run1_log.txt', 'w') 
 log.write("Date Reduced : %s \n" % datetime.now().isoformat())
 log.write("Instrument   : IRAC Channel 1 \n")
-log.write("File Type    : BCD \n")
+log.write("File Type    : %s \n" % constants[1].upper())
 log.write("Mission      : Cryogenic \n")
 log.write("Target       : HD165459 \n")
 log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(result['Flux (mJy)']), np.std(result['Flux (mJy)'])))
