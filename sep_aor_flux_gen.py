@@ -29,7 +29,7 @@ r, rIn, rOut = 10, 12, 20
 
 # Find the aperture correction factor from the following link:
 # https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/
-#from the table at the end of that link, select your value accoring to your aperture size and channel
+# From the table at the end of that link, select your value accoring to your aperture size and channel
 ap_corr = 1.000
 
 pixLen  = 1.221 #arcsec
@@ -39,11 +39,11 @@ pixArea = pixArea/(206265**2) #Steradian
 #----------------------------
 
 
+#initializing table to hold results
+result = Table(names = ('AORKEY', 'DateObs', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)'), dtype = ('i4', 'S25', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8'))
+
 #Generate data for each aor 
 for i, aor in tqdm(enumerate(AORs)):
-    
-    result = Table(names = ('AORKEY', 'DateObs', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)'), dtype = ('i4', 'S25', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8'))
-    
     
     #Performing photometry on every image in an AOR
     data, header = func.single_target_phot(aor, sky, r, rIn, rOut)
@@ -70,17 +70,17 @@ for i, aor in tqdm(enumerate(AORs)):
         DPos = '--'
     
     #using idl to remove systematics
-    try:
-        Xc       = data['Xc'][np.isnan(np.array(data['Xc']).astype('Float64')) == False]
-        Yc       = data['Yc'][np.isnan(np.array(data['Yc']).astype('Float64')) == False]
-        Res_Flux = data['Res_Flux'][np.isnan(np.array(data['Res_Flux']).astype('Float64')) == False]
+    Xc       = data['Xc'][np.isnan(np.array(data['Xc']).astype('Float64')) == False]
+    Yc       = data['Yc'][np.isnan(np.array(data['Yc']).astype('Float64')) == False]
+    Res_Flux = data['Res_Flux'][np.isnan(np.array(data['Res_Flux']).astype('Float64')) == False]
+    if len(Res_Flux) > 0:
         idl.setVariable('cenX', Xc)
         idl.setVariable('cenY', Yc)
         idl.setVariable('obsFlux', Res_Flux)
         idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, 1)')
         corFlux = idl.getVariable('corFlux')
-    except:
-        print "Idl caused some trouble for AOR# %i which has %i files to work with" % ((i+1), len(data['Xc']))
+    else:
+        print "Idl caused some trouble for AOR# %i, %i which has %i centers and %i fluxes" % ((i+1), aKey, len(Xc), len(Res_Flux))
         continue
     
     #applying aperture correction
@@ -98,19 +98,20 @@ for i, aor in tqdm(enumerate(AORs)):
     
 
 #Writing generated data tables to csv files
-ascii.write(result, 'Reduction_Data_&_Logs/run1_aor_data.csv', overwrite = False)
-ascii.write(cum_data, 'Reduction_Data_&_Logs/run1_img_data.csv', overwrite = False) 
+ascii.write(result, 'Reduction_Data_&_Logs/run1_aor_data.csv', delimiter = ',')
+ascii.write(cum_data, 'Reduction_Data_&_Logs/run1_img_data.csv', delimiter = ',') 
 
 
 
 #Writing a txt file that keeps log about this reduction run
 #----------------------------------------------------------
-log = open('Reduction_Data_&_Logs/run1_log.txt', 'x') #The 'x' instead of 'w' prevents overwriting
-log.write("Date Reduced : %s" % datetime.now().isoformat())
-log.write("Instrument   : IRAC Channel 1")
-log.write("File Type    : BCD")
-log.write("Mission      : Cryogenic")
-log.write("Target       : HD165459")
+log = open('Reduction_Data_&_Logs/run1_log.txt', 'w') 
+log.write("Date Reduced : %s \n" % datetime.now().isoformat())
+log.write("Instrument   : IRAC Channel 1 \n")
+log.write("File Type    : BCD \n")
+log.write("Mission      : Cryogenic \n")
+log.write("Target       : HD165459 \n")
+log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(result['Flux (mJy)']), np.std(result['Flux (mJy)'])))
 log.write("Comments     : Test run. No outliers rejected yet. Used a radius combination of (10, 12, 20)px.")
 log.close()
 #----------------------------------------------------------

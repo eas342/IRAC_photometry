@@ -1,0 +1,7 @@
+Date Reduced : 2018-09-20T14:47:40.327561 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Mission      : Cryogenic 
+Target       : HD165459 
+Average Flux : 639.95 +- 2.43 
+Comments     : Test run. No outliers rejected yet. Used a radius combination of (10, 12, 20)px.
