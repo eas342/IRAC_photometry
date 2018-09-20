@@ -158,3 +158,17 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
         
     return data, header
+
+
+def sigma_clipping(array, N):
+    stdev = np.std(array)
+    mean  = np.mean(array)
+    
+    upr_lim = mean + (N*stdev)
+    lwr_lim = mean - (N*stdev)
+    
+    mask = np.where((array>lwr_lim) & (array<upr_lim))
+    new_array = array[mask]
+    
+    return array, mask
+    
