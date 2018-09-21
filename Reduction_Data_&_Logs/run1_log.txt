@@ -1,7 +1,8 @@
-Date Reduced : 2018-09-20T14:47:40.327561 
+Date Reduced : 2018-09-21T11:14:43.085652 
 Instrument   : IRAC Channel 1 
 File Type    : BCD 
 Mission      : Cryogenic 
 Target       : HD165459 
 Average Flux : 639.95 +- 2.43 
-Comments     : Test run. No outliers rejected yet. Used a radius combination of (10, 12, 20)px.
+Comments     : Test run. Proper systematics applied but no outlier rejected. Used a radius combination of (10,12,20)px.
+Issues       : Found some AORs containing over a 100 files that are all NaNs due to target not being in FOV. These are AOR# 24960256, 24960512, 25127680, 25127936, 27150336, 27150592

@@ -13,9 +13,10 @@ from datetime import datetime
 #Defining general constants
 #---------------------------
 
-print '\n', 'Please input the following arguments and seperate them with a comma-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n', '4. Source Aperture Radius in px (eg. 10) \n', '5. Inner Background Radius in px (eg. 12) \n', '6. Outer Background Radius in px (eg. 20) \n', '7. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '8. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '9. Sigma Clipping Number (e.g. 10) [optional argument]', '\n'
+print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Name (e.g. HD 165459)\n', '4. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n', '5. Mission (Cryogenic or Warm)\n','6. Source Aperture Radius in px (eg. 10) \n', '7. Inner Background Radius in px (eg. 12) \n', '8. Outer Background Radius in px (eg. 20) \n', '9. Channel# (1,2,3 or 4) \n', '10. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '11. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '12. Run# (For output file name. Should be an integer)\n', '13. Sigma Clipping Number (e.g. 10) [optional argument] \n', '14. Comments (to be included in the log) [optional argument] \n', 'Don\'t jump to any argument. You can ommit the optional arguments but not skip them.\n', 'e.g. you can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'N/A\' for sigma (or any optional arg) if you don\'t want sigma clipping \n','\n'
 
-constants = raw_input('Input the parameters listed above: ').split(',')
+constants = raw_input('Input the parameters listed above: ').split(';')
+print constants
 
                       
 AORnames = np.sort(glob.glob(constants[0]))
@@ -29,16 +30,16 @@ for aor in AORnames:
 #Provide proper sky coordinates in hms
 # '18 02 30.7410086899 +58 37 38.157415821' for HD 165459
 # '17 24 52.2772360943 +60 25 50.780790994' for BD +60 1753
-sky = SkyCoord(constants[2], unit=(u.hourangle, u.deg))
+sky = SkyCoord(constants[3], unit=(u.hourangle, u.deg))
 
-r, rIn, rOut = int(constants[3]), int(constants[4]), int(constants[5])
+r, rIn, rOut = int(constants[5]), int(constants[6]), int(constants[7])
 
 # Find the aperture correction factor from the following link:
 # https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/
 # From the table at the end of that link, select your value accoring to your aperture size and channel
-ap_corr = float(constants[6])
+ap_corr = float(constants[9])
 
-pixLen  = float(constants[7]) #arcsec
+pixLen  = float(constants[10]) #arcsec
 pixArea = pixLen**2 #arcsec^2
 pixArea = pixArea/(206265**2) #Steradian
 
@@ -52,7 +53,10 @@ result = Table(names = ('AORKEY', 'DateObs', 'Cycling DPattern', 'DScale', 'DPos
 for i, aor in tqdm(enumerate(AORs)):
     
     #Performing photometry on every image in an AOR
-    data, header = func.single_target_phot(aor, sky, r, rIn, rOut)
+    if len(aor)>0:
+        data, header = func.single_target_phot(aor, sky, r, rIn, rOut)
+    else:
+        print 'empty aor: %i' % aKey
     
     #Cumulating all the data tables from every aor
     if i==0:
@@ -83,7 +87,8 @@ for i, aor in tqdm(enumerate(AORs)):
         idl.setVariable('cenX', Xc)
         idl.setVariable('cenY', Yc)
         idl.setVariable('obsFlux', Res_Flux)
-        idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, 1)')
+        idl.setVariable('ch', constants[8])
+        idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, ch)')
         corFlux = idl.getVariable('corFlux')
     else:
         print "Idl caused some trouble for AOR# %i, %i which has %i centers and %i fluxes" % ((i+1), aKey, len(Xc), len(Res_Flux))
@@ -104,20 +109,20 @@ for i, aor in tqdm(enumerate(AORs)):
     
 
 #Writing generated data tables to csv files
-ascii.write(result, 'Reduction_Data_&_Logs/run1_aor_data.csv', delimiter = ',')
-ascii.write(cum_data, 'Reduction_Data_&_Logs/run1_img_data.csv', delimiter = ',') 
+ascii.write(result, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[11], delimiter = ',')
+ascii.write(cum_data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[11], delimiter = ',') 
 
 
 
 #Writing a txt file that keeps log about this reduction run
 #----------------------------------------------------------
-log = open('Reduction_Data_&_Logs/run1_log.txt', 'w') 
+log = open('Reduction_Data_&_Logs/run%s_log.txt' % constants[11], 'w') 
 log.write("Date Reduced : %s \n" % datetime.now().isoformat())
-log.write("Instrument   : IRAC Channel 1 \n")
+log.write("Instrument   : IRAC Channel %s \n" % constants[8])
 log.write("File Type    : %s \n" % constants[1].upper())
-log.write("Mission      : Cryogenic \n")
-log.write("Target       : HD165459 \n")
+log.write("Mission      : %s \n" % constants[4])
+log.write("Target       : %s \n" % constants[2])
 log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(result['Flux (mJy)']), np.std(result['Flux (mJy)'])))
-log.write("Comments     : Test run. No outliers rejected yet. Used a radius combination of (10, 12, 20)px.")
+log.write("Comments     : %s" % constants[13])
 log.close()
 #----------------------------------------------------------
