@@ -1,0 +1,8 @@
+Date Reduced : 2018-09-21T14:49:44.434809 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Mission      : Cryogenic 
+Target       : BD +60 1753 
+Average Flux : 38.58 +- 2.27 
+Comments     : Test run. Proper systematics applied but no outlier rejected. Used a radius combination of (10,12,20)px.
+Issues       : Found some AORs that are completely empty. These are AOR# 15264000, 15264000

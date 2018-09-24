@@ -1,0 +1,8 @@
+Date Reduced : 2018-09-21T14:58:07.322715 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Mission      : Warm 
+Target       : BD +60 1753 
+Average Flux : 39.05 +- 0.74 
+Comments     : Test run.Warm mission specific systematics are not applied
+Issues       : Some AORs were empty:  45407744, 46003200 and some that only contained NaNs: 44641024, 44641280, 44642816, 44643072, 45711104            
