@@ -162,13 +162,13 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
 
 def sigma_clipping(array, N):
     stdev = np.std(array)
-    mean  = np.mean(array)
+    median  = np.median(array)
     
-    upr_lim = mean + (N*stdev)
-    lwr_lim = mean - (N*stdev)
+    upr_lim = median + (N*stdev)
+    lwr_lim = median - (N*stdev)
     
-    mask = np.where((array>lwr_lim) & (array<upr_lim))
+    mask = ((array>lwr_lim) & (array<upr_lim))
     new_array = array[mask]
     
-    return array, mask
+    return new_array, mask
     
