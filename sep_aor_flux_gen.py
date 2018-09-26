@@ -67,7 +67,10 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
             idl.setVariable('cenY', Yc)
             idl.setVariable('obsFlux', Res_Flux)
             idl.setVariable('ch', constants[8])
-            idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, ch)')
+            if constants[4] == 'Warm':
+                idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
+            else:
+                idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, ch)')
             corFlux = idl.getVariable('corFlux')
             corFlux = np.array(corFlux).astype('Float64')
         else:
@@ -80,7 +83,7 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
         #...................
         sig = (np.std(corFlux)/np.std(corFlux))*100
         if (N == 'n/a') | (len(corFlux)<=10) | (sig<2):
-            continue
+            refFlux = corFlux
         else:
             refFlux = np.delete(corFlux, [np.argmin(corFlux), np.argmax(corFlux)])
         clipped = len(corFlux) - len(refFlux)
@@ -102,7 +105,7 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
         spread = (error/flux)*100
         #........................
 
-
+        
         result.add_row([aKey, dObs, DPat, DScl, DPos, fTim, time, flux, error, spread, clipped])
     
     return result, cum_data, problem
@@ -152,11 +155,10 @@ if __name__=='__main__':
     #----------------------------
     
     
-    
-    result, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N)
-    #Writing generated data tables to csv files
-    ascii.write(result, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[11], delimiter = ',')
-    ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[11], delimiter = ',') 
+    #Generating & writing data tables to csv files
+    res, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N)
+    ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[11], delimiter = ',', overwrite = True)
+    ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[11], delimiter = ',', overwrite = True) 
 
 
 
@@ -169,8 +171,8 @@ if __name__=='__main__':
     log.write("File Type    : %s \n" % constants[1].upper())
     log.write("Mission      : %s \n" % constants[4])
     log.write("Target       : %s \n" % constants[2])
-    log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(result['Flux (mJy)']), np.std(result['Flux (mJy)'])))
-    log.write("Problem AORs : " + ("%i"*len(prob) % tuple(prob)) + "\n")
+    log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(res['Flux (mJy)']), np.std(res['Flux (mJy)'])))
+    log.write("Problem AORs : " + ("%i "*len(prob) % tuple(prob)) + "\n")
     log.write("Comments     : %s" % constants[13])
     log.close()
     #----------------------------------------------------------

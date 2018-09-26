@@ -1,0 +1,7 @@
+Date Reduced : 2018-09-25T16:03:51.709521 
+Command Used : /data1/phot_cal/spitzer/bd601753/cryo/r*/;bcd;BD +60 1753;17 24 52.2772360943 +60 25 50.780790994;Cryogenic;10;12;20;1;1.0;1.221;6;10;Min and max outliers are rejected (without iterating). rad comb: (10,12,20)px. 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Mission      : Cryogenic 
+Target       : BD +60 1753 
+Average Flux : 39.04 +- 0.00 
