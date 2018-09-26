@@ -1,0 +1,9 @@
+Date Reduced : 2018-09-26T13:41:48.099642 
+Command Used : /data1/phot_cal/spitzer/bd601753/warm/r*/;bcd;BD +60 1753;17 24 52.2772360943 +60 25 50.780790994;Warm;10;12;20;1;1.0;1.221;8;yes;Proper systematics applied. Outliers rejected by rejecting min and max if sig>2%. 10-12-20 rad combo. 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Mission      : Warm 
+Target       : BD +60 1753 
+Average Flux : 38.80 +- 0.75 
+Problem AORs : 44641024 44641280 44642816 44643072 45407744 45407744 45407744 45407744 45407744 45407744 45407744 45407744 45407744 45407744 45711104 46003200 46003200 46003200 46003200 46003200 46003200 
+Comments     : Proper systematics applied. Outliers rejected by rejecting min and max if sig>2%. 10-12-20 rad combo.

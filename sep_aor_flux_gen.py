@@ -119,7 +119,7 @@ if __name__=='__main__':
     #Defining general constants
     #---------------------------
 
-    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Name (e.g. HD 165459)\n', '4. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n', '5. Mission (e.g. Cryogenic or Warm)\n','6. Source Aperture Radius in px (eg. 10) \n', '7. Inner Background Radius in px (eg. 12) \n', '8. Outer Background Radius in px (eg. 20) \n', '9. Channel# (1,2,3 or 4) \n', '10. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '11. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '12. Run# (For output file name. Should be an integer)\n', '13. Sigma Clipping Number (e.g. 10) \n', '14. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here. It\'s generally a good idea a to include the radius combination used in the comments. \n', '\n'
+    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Name (e.g. HD 165459)\n', '4. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n', '5. Mission (e.g. Cryogenic or Warm)\n','6. Source Aperture Radius in px (eg. 10) \n', '7. Inner Background Radius in px (eg. 12) \n', '8. Outer Background Radius in px (eg. 20) \n', '9. Channel# (1,2,3 or 4) \n', '10. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '11. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '12. Run# (For output file name. Should be an integer)\n', '13. Sigma Clipping Number (e.g. 10) \n', '14. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here. \n', '\n'
 
     const_str = raw_input('Input the parameters listed above: ') 
     constants = const_str.split(';')
@@ -171,6 +171,7 @@ if __name__=='__main__':
     log.write("File Type    : %s \n" % constants[1].upper())
     log.write("Mission      : %s \n" % constants[4])
     log.write("Target       : %s \n" % constants[2])
+    log.write("Radius Combo : src_r: %i, bkg_in: %i, bkg_out: %i \n" % (r, rIn, rOut))
     log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(res['Flux (mJy)']), np.std(res['Flux (mJy)'])))
     log.write("Problem AORs : " + ("%i "*len(prob) % tuple(prob)) + "\n")
     log.write("Comments     : %s" % constants[13])

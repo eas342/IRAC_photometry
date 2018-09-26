@@ -1,0 +1,9 @@
+Date Reduced : 2018-09-26T12:43:38.390598 
+Command Used : /data1/phot_cal/spitzer/bd601753/cryo/r*/;bcd;BD +60 1753;17 24 52.2772360943 +60 25 50.780790994;Cryogenic;10;12;20;1;1.0;1.221;7;yes;Proper systematics applied. Outliers rejected by rejecting min and max if sig>2%. 10-12-20 rad combo. 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Mission      : Cryogenic 
+Target       : BD +60 1753 
+Average Flux : 38.58 +- 2.27 
+Problem AORs : 15264000 15264000 24290816 
+Comments     : Proper systematics applied. Outliers rejected by rejecting min and max if sig>2%. 10-12-20 rad combo.
