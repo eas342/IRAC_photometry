@@ -171,7 +171,7 @@ if __name__=='__main__':
     log.write("File Type    : %s \n" % constants[1].upper())
     log.write("Mission      : %s \n" % constants[4])
     log.write("Target       : %s \n" % constants[2])
-    log.write("Radius Combo : src_r: %i, bkg_in: %i, bkg_out: %i \n" % (r, rIn, rOut))
+    log.write("Radius Used  : src_r: %i, bkg_in: %i, bkg_out: %i \n" % (r, rIn, rOut))
     log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(res['Flux (mJy)']), np.std(res['Flux (mJy)'])))
     log.write("Problem AORs : " + ("%i "*len(prob) % tuple(prob)) + "\n")
     log.write("Comments     : %s" % constants[13])
