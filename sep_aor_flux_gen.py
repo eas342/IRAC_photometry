@@ -125,8 +125,11 @@ if __name__=='__main__':
     constants = const_str.split(';')
     print constants
 
-
-    AORnames = np.sort(glob.glob(constants[0]))
+    if '*' in constants[0]:
+        AORnames = np.sort(glob.glob(constants[0]))
+    else:
+        AORnames = constants[0].split(',')
+        
     AORs = []
 
     for aor in AORnames:
