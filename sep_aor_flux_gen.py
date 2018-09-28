@@ -14,7 +14,7 @@ from datetime import datetime
 
 #Creating a table generating function that can be called from scripts
 #---------------------------------------------------------------------
-def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
+def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, mission, channel, N):
     #initializing table to hold results
     result = Table(names = ('AORKEY', 'DateObs', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
@@ -24,7 +24,7 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
     #Generate data for each aor
     for i, aor in tqdm(enumerate(AORs)):
 
-
+        
         #Performing photometry on every image in an AOR
         if len(aor)>0:
             data, header = func.single_target_phot(aor, sky, r, rIn, rOut)
@@ -55,7 +55,7 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
         except:
             DPos = '--'
         #...................................................
-
+        
 
         #Using IDL to remove systematics
         #................................
@@ -66,8 +66,8 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N):
             idl.setVariable('cenX', Xc)
             idl.setVariable('cenY', Yc)
             idl.setVariable('obsFlux', Res_Flux)
-            idl.setVariable('ch', constants[8])
-            if constants[4] == 'Warm':
+            idl.setVariable('ch', channel)
+            if mission == 'Warm':
                 idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
             else:
                 idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, ch)')
@@ -142,7 +142,11 @@ if __name__=='__main__':
     # '17 24 52.2772360943 +60 25 50.780790994' for BD +60 1753
     sky = SkyCoord(constants[3], unit=(u.hourangle, u.deg))
 
+    mission = constants[4]
+    
     r, rIn, rOut = int(constants[5]), int(constants[6]), int(constants[7])
+    
+    channel = int(constants[8])
 
     # Find the aperture correction factor from the following link:
     # https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/
@@ -159,7 +163,7 @@ if __name__=='__main__':
     
     
     #Generating & writing data tables to csv files
-    res, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, N)
+    res, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, mission, channel, N)
     ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[11], delimiter = ',', overwrite = True)
     ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[11], delimiter = ',', overwrite = True) 
 

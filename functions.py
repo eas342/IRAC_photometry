@@ -116,7 +116,6 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
 
         Time = header['MJD_OBS']
         
-
         try:
             w = WCS(header)
             pix = targetCrd.to_pixel(w)
