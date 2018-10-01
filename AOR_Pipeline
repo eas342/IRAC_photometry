@@ -133,7 +133,7 @@ if __name__=='__main__':
     AORs = []
 
     for aor in AORnames:
-        fnames = np.sort(glob.glob(aor + 'ch1/' + constants[1] + '/*_' + constants[1] + '.fits'))
+        fnames = np.sort(glob.glob(aor + 'ch' + constants[8] + '/' + constants[1] + '/*_' + constants[1] + '.fits'))
         AORs.append(fnames)
 
 
