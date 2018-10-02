@@ -15,15 +15,15 @@ This repository provides a pipeline that performs high-precision photometric red
 ## Important Files/Folders In This Repository
 
 - ### AOR_Pipeline.py
-  This is the actual pipeline. You can run it directly from terminal or from another script. It's uses, inputs and outputs are discussed in a later section.
+  This is the actual pipeline. You can run it directly from terminal or from another script. Its uses, inputs and outputs are discussed in a later section.
   
 - ### functions.py
   This is a general library of functions. The pipeline is dependent on this file so, it has to be in the same folder as the pipeline.
   
 - ### Reduction_Data_&_Logs (Folder)
-  Data files generated from the pipeline is stored in this folder. Every time the pipeline is run, it generates 3 files:
+  Data files generated from the pipeline are stored in this folder. Every time the pipeline is run, it generates 3 files:
   - *run?_aor_data.csv*: This file provides the average flux per AOR and other important information for individual AORs such as aorkey, date of obsservation, dither information etc.
-  - *run?_img_data.csv*: This file provides flux from every single image from every AOR. It includes image specific information like source flux, gaussian fitted center position, fwhms of fitted gaussian, problem in an image (if any) etc.
+  - *run?_img_data.csv*: This file provides flux from every single image from every AOR. It includes image specific information like source flux, gaussian fitted center position, FWHMs of fitted gaussian, problem in an image (if any) etc.
   - *run?_log.txt*: This file provides information about the run such as: date of run, target info, mission, instrument, radius used, terminal calling sequence etc.
   
 - ### General_Plots (Folder)
@@ -33,4 +33,11 @@ This repository provides a pipeline that performs high-precision photometric red
 ## How To Use
 
 - ### From Script/IDE
+  ```python
+  import AOR_Pipeline as pipeline
+  aor_data, img_data, prob_aor = pipeline.run(input parameters)
+  ```
 - ### From Terminal/Command line
+  ```python
+  python AOR_Pipeline.py
+  ```
