@@ -8,17 +8,26 @@ This repository provides a pipeline that performs high-precision photometric red
   astropy, photutils, mirpyidl, tqdm
 
 - ### IDL programs
- - [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/)
- - [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/)
+  - [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/)
+  - [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/)
 
 
 ## Important Files/Folders In This Repository
 
 - ### AOR_Pipeline.py
-  This is the actual pipeline.
+  This is the actual pipeline. You can run it directly from terminal or from another script. It's uses, inputs and outputs are discussed in a later section.
+  
 - ### functions.py
+  This is a general library of functions. The pipeline is dependent on this file so, it has to be in the same folder as the pipeline.
+  
 - ### Reduction_Data_&_Logs (Folder)
+  Data files generated from the pipeline is stored in this folder. Every time the pipeline is run, it generates 3 files:
+  - *run?_aor_data.csv*: This file provides the average flux per AOR and other important information for individual AORs such as aorkey, date of obsservation, dither information etc.
+  - *run?_img_data.csv*: This file provides flux from every single image from every AOR. It includes image specific information like source flux, gaussian fitted center position, fwhms of fitted gaussian, problem in an image (if any) etc.
+  - *run?_log.txt*: This file provides information about the run such as: date of run, target info, mission, instrument, radius used, terminal calling sequence etc.
+  
 - ### General_Plots (Folder)
+  - The pipeline itself does not generate plots. However, it holds all the plots I have made using data genarated from the pipeline.  
 
 
 ## How To Use
