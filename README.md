@@ -33,11 +33,34 @@ This repository provides a pipeline that performs high-precision photometric red
 ## How To Use
 
 - ### From Script/IDE
-  ```python
-  import AOR_Pipeline as pipeline
-  aor_data, img_data, prob_aor = pipeline.run(input parameters)
-  ```
+  - #### Calling sequence
+    The pipeline can be called from a script or an IDL like a python module (provided that AOR_pipeline.py is in the same folder as the script or its path is specified). Here is an example:
+    ```python
+    import AOR_Pipeline as pipeline
+    aor_data, img_data, prob_aor = pipeline.run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, mission, channel, N)
+    ```
+    The input parameters and outputs are discussed below.
+    
+  - #### Input Parameters
+    - AORs: 
+    - sky:
+    - r, rIn, rOut:
+    - ap_corr:
+    - pixArea:
+    - mission:
+    - channel:
+    - N:
+    
+  - #### Output Quantities
+    - aor_data:
+    - img_data:
+    - prob_aor:
+  
 - ### From Terminal/Command line
-  ```python
-  python AOR_Pipeline.py
-  ```
+  - #### Calling sequence
+    The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used. Here is what it looks like when the pipeline is called from terminal:
+  - #### Input Parameters
+  - #### Output Parameters
+  
+
+## Systematics Being Applied Through The Pipeline
