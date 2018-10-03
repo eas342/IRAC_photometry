@@ -42,14 +42,18 @@ This repository provides a pipeline that performs high-precision photometric red
     The input parameters and outputs are discussed below.
     
   - #### Input Parameters
-    - AORs: 
-    - sky:
-    - r, rIn, rOut:
-    - ap_corr:
-    - pixArea:
-    - mission:
-    - channel:
-    - N:
+    - **AORs**: A 2D list/array that contains the filenames of desired files. For examples, if you want to work with 2 AORs that have 2 and 3 BCD files respectively, the list would look something like:
+      ```python
+      AORs = [['aor1_file1_bcd.fits', 'aor1_file2_bcd.fits'],
+             ['aor2_file1_bcd.fits', 'aor2_file2_bcd.fits', 'aor2_file3_bcd.fits']]
+      ```
+    - **sky**:
+    - **r, rIn, rOut**:
+    - **ap_corr**:
+    - **pixArea**:
+    - **mission**:
+    - **channel**:
+    - **N**:
     
   - #### Output Quantities
     - aor_data:
@@ -58,7 +62,7 @@ This repository provides a pipeline that performs high-precision photometric red
   
 - ### From Terminal/Command line
   - #### Calling sequence
-    The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used. Here is what it looks like when the pipeline is called from terminal:
+    The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used.
   - #### Input Parameters
   - #### Output Parameters
   
