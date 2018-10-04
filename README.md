@@ -77,7 +77,24 @@ This repository provides a pipeline that performs high-precision photometric red
     The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used. Here is what it will look like when the pipeline is called from terminal:
     ![screenshot](https://github.com/rafia37/IRAC_photometry/blob/master/pp_from_terminal.png "Running AOR_pipeline.py from terminal.")
   - #### Input Parameters
-  - #### Output Parameters
+    Since the input parameters have to be specified in the terminal, you don't have to worry about their data type (e.g. str, int. float etc). Just list the parameters separated by a semi-colon(;) in the format specified below:
+    - **File Path**: up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/)
+    - **File Type**: (eg. bcd)
+    - **Target Name**: (e.g. HD 165459)
+    - **Target Coordinates**: (e.g. 18 02 30.7410086899 +58 37 38.157415821)
+    - **Mission**: (e.g. Cryogenic or Warm)
+    - **Source Aperture Radius**: in px (eg. 10)
+    - **Inner Background Radius**: in px (eg. 12)
+    - **Outer Background Radius**: in px (eg. 20)
+    - **Channel#**: (1,2,3 or 4)
+    - **Aperture Correction Factor**: (collect from iracinstrumenthandbook/27, e.g. 1.000)
+    - **Pixel Size**: in arcsec (e.g. 1.221 for ch1)
+    - **Run#**: (For output file name. Should be an integer)
+    - **Outlier Rejection**: (e.g. 10)
+    - **Comments**: (to be included in the log)
+    Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here.
+  - #### Output Quantities
+    Once the pipeline completes running, 2 data tables as csv files and a text file will be genarated and saved in the *Reduction_Data_&_Logs* folder. These are the `run?_aor_data.csv`, `run?_img_data.csv` and `run?_log.txt` files described in *Important Files/Folders In This Repository* section.
   
 
 ## Systematics Being Applied Through The Pipeline
