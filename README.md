@@ -77,22 +77,24 @@ This repository provides a pipeline that performs high-precision photometric red
     The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used. Here is what it will look like when the pipeline is called from terminal:
     ![screenshot](https://github.com/rafia37/IRAC_photometry/blob/master/pp_from_terminal.png "Running AOR_pipeline.py from terminal.")
   - #### Input Parameters
-    Since the input parameters have to be specified in the terminal, you don't have to worry about their data type (e.g. str, int. float etc). Just list the parameters separated by a semi-colon(;) in the format specified below:
-    - **File Path**: up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/)
-    - **File Type**: (eg. bcd)
-    - **Target Name**: (e.g. HD 165459)
-    - **Target Coordinates**: (e.g. 18 02 30.7410086899 +58 37 38.157415821)
-    - **Mission**: (e.g. Cryogenic or Warm)
-    - **Source Aperture Radius**: in px (eg. 10)
-    - **Inner Background Radius**: in px (eg. 12)
-    - **Outer Background Radius**: in px (eg. 20)
-    - **Channel#**: (1,2,3 or 4)
-    - **Aperture Correction Factor**: (collect from iracinstrumenthandbook/27, e.g. 1.000)
-    - **Pixel Size**: in arcsec (e.g. 1.221 for ch1)
-    - **Run#**: (For output file name. Should be an integer)
-    - **Outlier Rejection**: (e.g. 10)
-    - **Comments**: (to be included in the log)
-    Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here.
+    Since the input parameters have to be specified in the terminal, you don't have to worry about using quotes when providing a string. For example, instead of writing *'Cryogenic'*, write *Cryogenic* without the quotes. Just list the parameters separated by a semi-colon(;) in the format specified below:
+    - **File Path**: File path up to aor names. Could be a file path with wildcard (preferred) or a comma separated list. So if you have 3 AORs in a folder you could specify it in the following ways:  
+    `/your/file/path/aor*/` or,  
+    `/your/file/path/aor1/,/your/file/path/aor2/,/your/file/path/aor3/`
+    - **File Type**: bcd or cbcd. Must be all lowercase.
+    - **Target Name**: Name of target. e.g. HD 165459
+    - **Target Coordinates**: Sky coordinates of target in hms for RA and dms for Dec. You can write it as `18 02 30.74 +58 37 38.16`, `8:02:30.74 +58:37:38.16` or `18h02m30.74s +58d37m38.16s`.
+    - **Mission**: Cryogenic or Warm. Spelling and case must be as shown.
+    - **Source Aperture Radius**: Source aperture in native pixel. (e.g. 10 px)
+    - **Inner Background Radius**: Inner background aperture in native pixel. (eg. 12 px)
+    - **Outer Background Radius**: Outer Background aperture in native pixel. (eg. 20 px)
+    - **Channel#**: 1,2,3 or 4. IRAC channel that was used to collect data.
+    - **Aperture Correction Factor**: A constant factor that depends on the radius combination and IRAC channel. You can find it from table 4.7 in this [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/).
+    - **Pixel Size**: Size of a pixel in arcseconds("). Find the appropriate pixel size from table 2.1 in the [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/).
+    - **Run#**: For output file name. Should be an integer. This number is what goes into "run?_aor_data.csv". So if you don't want the data to be overwritten, use a new run number.
+    - **Outlier Rejection**: If the value is *n/a*, no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
+    - **Comments**: Write anything that you would want to include in the log.  
+    Don't jump to any argument. e.g. You can't skip *Outlier Rejection* to get to *Comments*. *Comments* must be the 14th argument. You could however, use *n/a*, if you don't want outlier rejection. Here is an example parameter list that could be written on the terminal: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.74 +58 37 38.16;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here.
   - #### Output Quantities
     Once the pipeline completes running, 2 data tables as csv files and a text file will be genarated and saved in the *Reduction_Data_&_Logs* folder. These are the `run?_aor_data.csv`, `run?_img_data.csv` and `run?_log.txt` files described in *Important Files/Folders In This Repository* section.
   
