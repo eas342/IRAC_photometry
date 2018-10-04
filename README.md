@@ -2,6 +2,14 @@
 
 This repository provides a pipeline that performs high-precision photometric reduction on data from the IRAC instrument of Spitzer Space Telescope. The pipeline is designed for Level 1 IRAC products (i.e. BCD/CBCD files) and only takes input in AORs. An AOR (Astronomical Obeservation Request) is a fundamental unit of Spitzer observing with a unique identification number known as AORKEY. Each AOR consists of multiple BCD/CBCD files which can be thought of as single frame exposures. The end product of this pipeline are two tables that provide photometric analysis for individual BCDs and individual AORs (combination of several BCDs). 
 
+## Contents
+- [Dependencies](#dependencies)
+- [Important Files/Folders In This Repository](#important-files/folders-in-this-repository)
+- [How To Use](#how-to-use)
+  - [From Script/IDE](#from-script/ide)
+  - [From Terminal/Command Line](#from-terminal/command-line)
+- [Systematics Being Applied Through The Pipeline](#systematics-being-applied-through-the-pipeline)
+
 ## Dependencies
 
 - ### Python Packages
@@ -72,18 +80,18 @@ This repository provides a pipeline that performs high-precision photometric red
     - **img_data**: This is the table that would be saved as `run?_img_data.csv` if you ran the pipeline from terminal. Since you're running it from a script, you will get this astropy table which you can save with `ascci.write()` (as shown above) if you wish to.
     - **prob_aor**: This is a numpy array of AORKEYs of those AORs that caused some kind of problem and were not run by the pipeline. This is there so that you can check out these AORs and figure out what the problem is with these AORs. Common problems are usually that the AOR was empty, the target was not in FOV in any of the files in that AOR etc.
   
-- ### From Terminal/Command line
+- ### From Terminal/Command Line
   - #### Calling sequence
     The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used. Here is what it will look like when the pipeline is called from terminal:
     ![screenshot](https://github.com/rafia37/IRAC_photometry/blob/master/pp_from_terminal.png "Running AOR_pipeline.py from terminal.")
   - #### Input Parameters
     Since the input parameters have to be specified in the terminal, you don't have to worry about using quotes when providing a string. For example, instead of writing *'Cryogenic'*, write *Cryogenic* without the quotes. Just list the parameters separated by a semi-colon(;) in the format specified below:
     - **File Path**: File path up to aor names. Could be a file path with wildcard (preferred) or a comma separated list. So if you have 3 AORs in a folder you could specify it in the following ways:  
-    `/your/file/path/aor*/` or,  
+    `/your/file/path/aor*/` (preferred method) or,  
     `/your/file/path/aor1/,/your/file/path/aor2/,/your/file/path/aor3/`
     - **File Type**: bcd or cbcd. Must be all lowercase.
     - **Target Name**: Name of target. e.g. HD 165459
-    - **Target Coordinates**: Sky coordinates of target in hms for RA and dms for Dec. You can write it as `18 02 30.74 +58 37 38.16`, `8:02:30.74 +58:37:38.16` or `18h02m30.74s +58d37m38.16s`.
+    - **Target Coordinates**: Sky coordinates of target in hms for RA and dms for Dec. You can write it as `18 02 30.74 +58 37 38.16`, `18:02:30.74 +58:37:38.16` or `18h02m30.74s +58d37m38.16s`.
     - **Mission**: Cryogenic or Warm. Spelling and case must be as shown.
     - **Source Aperture Radius**: Source aperture in native pixel. (e.g. 10 px)
     - **Inner Background Radius**: Inner background aperture in native pixel. (eg. 12 px)
