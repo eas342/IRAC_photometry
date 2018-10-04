@@ -50,11 +50,13 @@ This repository provides a pipeline that performs high-precision photometric red
       Where the strings in the _list_ are the proper filepath/filename.
     - **sky**: An _astropy SkyCoord object_ that holds the sky coordinates (RA & Dec) of target in degrees. So, you could define _sky_ in any of the following ways:
       ```python
+      from astropy import units as u
+      from astropy.coordinates import SkyCoord
       sky = SkyCoord(10.625, 41.2, frame='icrs', unit='deg')
       sky = SkyCoord('00 42 30 +41 12 00', unit=(u.hourangle, u.deg))
       sky = SkyCoord('00:42.5 +41:12', unit=(u.hourangle, u.deg))
       ```
-    - **r, rIn, rOut**: The pipeline performs photometry using _photutils_ aperture photomotery where a circular aperture is used for source and circular annulus aperture is used for background. r, rIn and rOut are source aperture radius, inner background aperture radius and outer background aperture radius respectively. They can be an _int_ or _float_.
+    - **r, rIn, rOut**: The pipeline performs photometry using _photutils_ aperture photomotery where a circular aperture is used for source and circular annulus aperture is used for background. r, rIn and rOut are source aperture radius, inner background aperture radius and outer background aperture radius respectively. They can be _int_ or _float_.
     - **ap_corr**: This is the aperture correction factor (_float_). It depends on the radius combination (r, rIn, rOut) and IRAC channel. You can find the proper correction factor from table 4.7 in this [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/).
     - **pixArea**: Pixel size (_float_) in arcseconds("). Find the appropriate pixel size from table 2.1 in the [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/). 
     - **mission**: Two possible values (_string_) -'Cryogenic' or 'Warm' (That exact spelling and case). The AORs you provide must all be from the cryogenic mission or the warm mission; it can't take mixed AORs. The spitzer cryogenic mission ended on May 15th, 2009. So, sort input AORs based on that date. 
@@ -62,9 +64,13 @@ This repository provides a pipeline that performs high-precision photometric red
     - **N**: Outlier rejection factor. If the value is 'n/a', no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
     
   - #### Output Quantities
-    - aor_data:
-    - img_data:
-    - prob_aor:
+    - aor_data: This is the table that provides average flux per AOR and other important AOR-specific information like aorkey, date of obsservation, dither information etc. If the pipeline is run from a script it will not get saved as `run?_aor_data.csv`. You can choose to save the table as a csv file from your script with:
+      ```python
+      from astropy.io import ascii
+      ascii.write(aor_data, 'Reduction_Data_&_Logs/run?_aor_data.csv', delimiter = ',', overwrite = False)
+      ```
+    - img_data: This is the table that would be saved as `run?_img_data.csv` if you ran the pipeline from terminal. Since you're running it from a script, you will get this astropy table which you can save with `ascci.write()` (as shown above) if you wish to.
+    - prob_aor: This is a numpy array of AORKEYs of those AORs that caused some kind of problem and were not run by the pipeline. This is there so that you can check out these AORs and figure out what the problem is with these AORs. Common problems are usually that the AOR was empty, the target was not in FOV in any of the files in that AOR etc.
   
 - ### From Terminal/Command line
   - #### Calling sequence
