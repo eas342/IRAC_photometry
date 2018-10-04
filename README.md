@@ -4,10 +4,10 @@ This repository provides a pipeline that performs high-precision photometric red
 
 ## Contents
 - [Dependencies](#dependencies)
-- [Important Files/Folders In This Repository](#important-files/folders-in-this-repository)
+- [Important Files In This Repository](#important-files-in-this-repository)
 - [How To Use](#how-to-use)
-  - [From Script/IDE](#from-script/ide)
-  - [From Terminal/Command Line](#from-terminal/command-line)
+  - [From Script](#from-script)
+  - [From Terminal](#from-terminal)
 - [Systematics Being Applied Through The Pipeline](#systematics-being-applied-through-the-pipeline)
 
 ## Dependencies
@@ -20,7 +20,7 @@ This repository provides a pipeline that performs high-precision photometric red
   - [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/)
 
 
-## Important Files/Folders In This Repository
+## Important Files In This Repository
 
 - ### AOR_Pipeline.py
   This is the actual pipeline. You can run it directly from terminal or from another script. Its uses, inputs and outputs are discussed in a later section.
@@ -40,7 +40,7 @@ This repository provides a pipeline that performs high-precision photometric red
 
 ## How To Use
 
-- ### From Script/IDE
+- ### From Script
   - #### Calling sequence
     The pipeline can be called from a script or an IDL like a python module (provided that AOR_pipeline.py is in the same folder as the script or its path is specified). Here is an example:
     ```python
@@ -80,7 +80,7 @@ This repository provides a pipeline that performs high-precision photometric red
     - **img_data**: This is the table that would be saved as `run?_img_data.csv` if you ran the pipeline from terminal. Since you're running it from a script, you will get this astropy table which you can save with `ascci.write()` (as shown above) if you wish to.
     - **prob_aor**: This is a numpy array of AORKEYs of those AORs that caused some kind of problem and were not run by the pipeline. This is there so that you can check out these AORs and figure out what the problem is with these AORs. Common problems are usually that the AOR was empty, the target was not in FOV in any of the files in that AOR etc.
   
-- ### From Terminal/Command Line
+- ### From Terminal
   - #### Calling sequence
     The pipeline can be called from the terminal like any other python file: `python AOR_Pipeline.py`. Once it's called, it will print the list of input parameters with examples. Parameters need to be separated by a semi-colon (;) and no additional spaces or characters can be used. Here is what it will look like when the pipeline is called from terminal:
     ![screenshot](https://github.com/rafia37/IRAC_photometry/blob/master/pp_from_terminal.png "Running AOR_pipeline.py from terminal.")
@@ -104,7 +104,7 @@ This repository provides a pipeline that performs high-precision photometric red
     - **Comments**: Write anything that you would want to include in the log.  
     Don't jump to any argument. e.g. You can't skip *Outlier Rejection* to get to *Comments*. *Comments* must be the 14th argument. You could however, use *n/a*, if you don't want outlier rejection. Here is an example parameter list that could be written on the terminal: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.74 +58 37 38.16;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here.
   - #### Output Quantities
-    Once the pipeline completes running, 2 data tables as csv files and a text file will be genarated and saved in the *Reduction_Data_&_Logs* folder. These are the `run?_aor_data.csv`, `run?_img_data.csv` and `run?_log.txt` files described in *Important Files/Folders In This Repository* section.
+    Once the pipeline completes running, 2 data tables as csv files and a text file will be genarated and saved in the *Reduction_Data_&_Logs* folder. These are the `run?_aor_data.csv`, `run?_img_data.csv` and `run?_log.txt` files described in *Important Files In This Repository* section.
   
 
 ## Systematics Being Applied Through The Pipeline
