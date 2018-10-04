@@ -47,7 +47,8 @@ This repository provides a pipeline that performs high-precision photometric red
       AORs = [['aor1_file1_bcd.fits', 'aor1_file2_bcd.fits'],
              ['aor2_file1_bcd.fits', 'aor2_file2_bcd.fits', 'aor2_file3_bcd.fits']]
       ```
-    - **sky**:
+      Where the strings in the list are the proper filepath/filename.
+    - **sky**: An astropy SkyCoord object that holds the sky coordinates (RA & Dec) of target in degrees 
     - **r, rIn, rOut**:
     - **ap_corr**:
     - **pixArea**:
