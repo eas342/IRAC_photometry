@@ -22,9 +22,9 @@ This repository provides a pipeline that performs high-precision photometric red
   
 - ### Reduction_Data_&_Logs (Folder)
   Data files generated from the pipeline are stored in this folder. Every time the pipeline is run, it generates 3 files:
-  - *run?_aor_data.csv*: This file provides the average flux per AOR and other important information for individual AORs such as aorkey, date of obsservation, dither information etc.
-  - *run?_img_data.csv*: This file provides flux from every single image from every AOR. It includes image specific information like source flux, gaussian fitted center position, FWHMs of fitted gaussian, problem in an image (if any) etc.
-  - *run?_log.txt*: This file provides information about the run such as: date of run, target info, mission, instrument, radius used, terminal calling sequence etc.
+  - **run?_aor_data.csv**: This file provides the average flux per AOR and other important information for individual AORs such as aorkey, date of obsservation, dither information etc.
+  - **run?_img_data.csv**: This file provides flux from every single image from every AOR. It includes image specific information like source flux, gaussian fitted center position, FWHMs of fitted gaussian, problem in an image (if any) etc.
+  - **run?_log.txt**: This file provides information about the run such as: date of run, target info, mission, instrument, radius used, terminal calling sequence etc.
   
 - ### General_Plots (Folder)
   - The pipeline itself does not generate plots. However, it holds all the plots I have made using data genarated from the pipeline.  
@@ -42,19 +42,24 @@ This repository provides a pipeline that performs high-precision photometric red
     The input parameters and outputs are discussed below.
     
   - #### Input Parameters
-    - **AORs**: A 2D list/array that contains the filenames of desired files. For examples, if you want to work with 2 AORs that have 2 and 3 BCD files respectively, the list would look something like:
+    - **AORs**: A 2D _list/array_ that contains the filenames of desired files. For examples, if you want to work with 2 AORs that have 2 and 3 BCD files respectively, the list would look something like:
       ```python
       AORs = [['aor1_file1_bcd.fits', 'aor1_file2_bcd.fits'],
              ['aor2_file1_bcd.fits', 'aor2_file2_bcd.fits', 'aor2_file3_bcd.fits']]
       ```
-      Where the strings in the list are the proper filepath/filename.
-    - **sky**: An astropy SkyCoord object that holds the sky coordinates (RA & Dec) of target in degrees 
-    - **r, rIn, rOut**:
-    - **ap_corr**:
-    - **pixArea**:
-    - **mission**:
-    - **channel**:
-    - **N**:
+      Where the strings in the _list_ are the proper filepath/filename.
+    - **sky**: An _astropy SkyCoord object_ that holds the sky coordinates (RA & Dec) of target in degrees. So, you could define _sky_ in any of the following ways:
+      ```python
+      sky = SkyCoord(10.625, 41.2, frame='icrs', unit='deg')
+      sky = SkyCoord('00 42 30 +41 12 00', unit=(u.hourangle, u.deg))
+      sky = SkyCoord('00:42.5 +41:12', unit=(u.hourangle, u.deg))
+      ```
+    - **r, rIn, rOut**: The pipeline performs photometry using _photutils_ aperture photomotery where a circular aperture is used for source and circular annulus aperture is used for background. r, rIn and rOut are source aperture radius, inner background aperture radius and outer background aperture radius respectively. They can be an _int_ or _float_.
+    - **ap_corr**: This is the aperture correction factor (_float_). It depends on the radius combination (r, rIn, rOut) and IRAC channel. You can find the proper correction factor from table 4.7 in this [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/).
+    - **pixArea**: Pixel size (_float_) in arcseconds("). Find the appropriate pixel size from table 2.1 in the [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/). 
+    - **mission**: Two possible values (_string_) -'Cryogenic' or 'Warm' (That exact spelling and case). The AORs you provide must all be from the cryogenic mission or the warm mission; it can't take mixed AORs. The spitzer cryogenic mission ended on May 15th, 2009. So, sort input AORs based on that date. 
+    - **channel**: For possible values (_int_) - 1,2,3 or 4. This is the irac channel that was used to collect data. 
+    - **N**: Outlier rejection factor. If the value is 'n/a', no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
     
   - #### Output Quantities
     - aor_data:
