@@ -9,6 +9,17 @@ This repository provides a pipeline that performs high-precision photometric red
   - [From Script](#from-script)
   - [From Terminal](#from-terminal)
 - [Systematics Being Applied Through The Pipeline](#systematics-being-applied-through-the-pipeline)
+  - [Array Location Dependent Correction](#array-location-dependent-correction)
+  - [Pixel Phase Correction](#pixel-phase-correction)
+  - [Photometric Calibration](#photometric-calibration)
+  - [Aperture Correction](#aperture-correction)
+  - [Flat Fielding](#flat-fielding)
+  - [Linearity Correction](#linearity-correction)
+  - [Outlier Rejection](#outlier-rejection)
+- [Summary Of Current Tables And Plots](#summary-of-current-tables-and-plots)
+  - [Run Summary](#run-summary)
+  - [Plots Summary](#plots-summary)
+  - [Radius Test Table](#radius-test-table)
 
 ## Dependencies
 
@@ -108,3 +119,17 @@ This repository provides a pipeline that performs high-precision photometric red
   
 
 ## Systematics Being Applied Through The Pipeline
+
+- ### Array Location Dependent Correction
+- ### Pixel Phase Correction
+- ### Photometric Calibration
+- ### Aperture Correction
+- ### Flat Fielding
+- ### Linearity Correction
+- ### Outlier Rejection
+
+## Summary Of Current Tables And Plots
+
+- ### Run Summary
+- ### Plots Summary
+- ### Radius Test Table
