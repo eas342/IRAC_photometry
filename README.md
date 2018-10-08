@@ -45,7 +45,10 @@ This repository provides a pipeline that performs high-precision photometric red
   - **run?_log.txt**: This file provides information about the run such as: date of run, target info, mission, instrument, radius used, terminal calling sequence etc.
   
 - ### General_Plots (Folder)
-  - The pipeline itself does not generate plots. However, it holds all the plots I have made using data genarated from the pipeline.  
+  The pipeline itself does not generate plots. However, it holds all the plots I have made using data genarated from the pipeline. 
+  
+- ### Correction_files (Folder)
+  This file contains the idl codes that I used to apply systematics and some correction images as fits files. 
 
 
 ## How To Use
@@ -123,13 +126,20 @@ Three of the corrections (array location dependent correction, pixel phase corre
 
 - ### Array Location Dependent Correction
   This is a correction that is required for point source photometry or compact sources. IRAC flatfield is made by imaging the high surface brightness zodical background (ZB). Firstly, since the ZB is extended and effectively uniform over the IRAC FOV, its effective gain is slightly different from a point source effective gain. Secondly, spectrum of the ZB peaks redward of the IRAC filters while spectrum of high color temerature sources like stars peak blueward of IRAC filters and are well on the Rayleigh-Jeans side of blackbody spectrum. Thus, IRAC photometry of warm sources require a correction for the spectral slope change between zodical light and Rayleigh-Jeans spectra. Lastly, the effective filter bandpass of IRAC varies as a function of angle of incidence. Thus, all objects in the IRAC FOV needs to be corrected based on their location on the array.  
-  All these effects can be corrected by using correction images from [IRAC instrument webpage](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/calibrationfiles/locationcolor/). The correction images are different for the cryogenic and warm missions. These correction images are for compact, point-like sources Rayleigh-Jeans (stellar, Vega-like) spectrum. To apply these correction images, we need to multiply the value from correction image at the central pixel of target to the observed flux of target from BCD file. This gives the corrected flux value. The variation in measured fluxes can reach up to 10% peak-to-peak. This is larger than any other source of uncertainty in IRAC calibration.
+  All these effects can be corrected by using correction images from [IRAC instrument webpage](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/calibrationfiles/locationcolor/). You can also find these correction images in the *Correction_files* folder. The correction images are different for the cryogenic and warm missions. These correction images are for compact, point-like sources Rayleigh-Jeans (stellar, Vega-like) spectrum. To apply these correction images, we need to multiply the value from correction image at the central pixel of target to the observed flux of target from BCD file. This gives the corrected flux value. The variation in measured fluxes can reach up to 10% peak-to-peak. This is larger than any other source of uncertainty in IRAC calibration.
   
 - ### Pixel Phase Correction
-  Due to the variation of quantum efficiency across a pixel, the measured flux density of a point source depends on the exact loaction where the peak of the point spread function (PSF) falls on a pixel. This effect is most severe in channel 1 and the correction of this effect can be as much as 4% peak-to-peak. To correct for this effect, we can use [correction images](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/20/#_Toc410728308) that are a two dimensional function of pixel phase.
+  Due to the variation of quantum efficiency across a pixel, the measured flux density of a point source depends on the exact loaction where the peak of the point spread function (PSF) falls on a pixel. This effect is most severe in channel 1 and the correction of this effect can be as much as 4% peak-to-peak. To correct for this effect, we can use [correction images](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/20/#_Toc410728308) that are a two dimensional function of pixel phase. You can also find these images in the *Correction_files* folder.
   
 - ### Photometric Calibration
-  To obtain an absolute flux calibration, about 11 standard stars in the continuous viewing zone were observed in each instrument campaign. IRAC provides flux calibration constants for each channel that needs to be multipled to the measured flux to obtain calibrated flux. The proper constant can be found from a [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/17/#_Toc410728305) in the IRAC instrument handbook.
+  To obtain an absolute flux calibration, about 11 standard stars in the continuous viewing zone were observed in each instrument campaign. IRAC provides flux calibration constants for each channel that needs to be multipled to the measured flux to obtain calibrated flux. The proper constant can be found from a [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/17/#_Toc410728305) in the IRAC instrument handbook but I am providing it here as well:
+  | Channel | Constant (MJy/sr)/(DN/sec) |
+  | --- | --- |
+  | 1 | 0.1088 (0.1253) |
+  | 2 | 0.1388 (0.1469) |
+  | 3 | 0.5952 |
+  | 4 | 0.2021 |
+  The values in parentheses are for warm mission.
   
 - ### Aperture Correction
   Aperture correction is a correction that compensates for flux that is lost from point source observation. IRAC instrument handbook provides an estimate of aperture corrections based on channel and radius combination used. It can be found from this [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/#_Toc410728317).
