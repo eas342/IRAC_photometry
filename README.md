@@ -112,7 +112,7 @@ This repository provides a pipeline that performs high-precision photometric red
     - **Run#**: For output file name. Should be an integer. This number is what goes into "run?_aor_data.csv". So if you don't want the data to be overwritten, use a new run number.
     - **Outlier Rejection**: If the value is *n/a*, no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
     - **Comments**: Write anything that you would want to include in the log.  
-    Don't jump to any argument. e.g. You can't skip *Outlier Rejection* to get to *Comments*. *Comments* must be the 14th argument. You could however, use *n/a*, if you don't want outlier rejection. Here is an example parameter list that could be written on the terminal: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.74 +58 37 38.16;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here.
+    Don't jump to any argument. e.g. You can't skip *Outlier Rejection* to get to *Comments*. *Comments* must be the 14th argument. You could however, use *n/a*, if you don't want outlier rejection. Here is an example parameter list that could be written on the terminal: `/data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.74 +58 37 38.16;Cryogenic;10;12;20;1;1.0;1.221;5;10;Your comment goes here.`
   - #### Output Quantities
     Once the pipeline completes running, 2 data tables as csv files and a text file will be genarated and saved in the *Reduction_Data_&_Logs* folder. These are the `run?_aor_data.csv`, `run?_img_data.csv` and `run?_log.txt` files described in *Important Files In This Repository* section.
   
@@ -135,6 +135,7 @@ Three of the corrections (array location dependent correction, pixel phase corre
   Aperture correction is a correction that compensates for flux that is lost from point source observation. IRAC instrument handbook provides an estimate of aperture corrections based on channel and radius combination used. It can be found from this [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/#_Toc410728317).
   
 - ### Linearity Correction
+  TBD
   
 - ### Outlier Rejection
   Outliers are rejected per AOR by rejecting the maximum and minimum flux values if the spread of distribution is greater than 2% and the AOR has at least 10 files to work with. If you wish to do sigma clipping, you can do so using the `functions.py` script:
