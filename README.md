@@ -13,7 +13,6 @@ This repository provides a pipeline that performs high-precision photometric red
   - [Pixel Phase Correction](#pixel-phase-correction)
   - [Photometric Calibration](#photometric-calibration)
   - [Aperture Correction](#aperture-correction)
-  - [Flat Fielding](#flat-fielding)
   - [Linearity Correction](#linearity-correction)
   - [Outlier Rejection](#outlier-rejection)
 - [Summary Of Current Tables And Plots](#summary-of-current-tables-and-plots)
@@ -120,11 +119,16 @@ This repository provides a pipeline that performs high-precision photometric red
 
 ## Systematics Being Applied Through The Pipeline
 
+Three of the corrections (array location dependent correction, pixel phase correction and photometric calibration) are applied using [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/) for cryogenic mission and [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/) for warm mission. The BCD/CBCD files are flat fielded and linearity corrected through Spitzer Science Center's BCD pipeline.
+
 - ### Array Location Dependent Correction
+  This is a correction that is required for point source photometry or compact sources. IRAC flatfield is made by imaging the high surface brightness zodical background (ZB). Firstly, since the ZB is extended and effectively uniform over the IRAC FOV, its effective gain is slightly different from a point source effective gain. Secondly, spectrum of the ZB peaks redward of the IRAC filters while high color temerature sources like stars peak blueward of IRAC filters and are usually on the Rayleigh-Jeans side of the blackbody spectrum. Thus, IRAC photometry of warm sources require a correction for the spectral slope change between zodical light and Rayleigh-Jeans spectra. Lastly, the effective filter bandpass of IRAC varies as a function of angle of incidence. Thus, all objects in the IRAC FOV needs to be corrected based on their location on the array.  
+  All these effects can be corrected by using correction images from [IRAC instrument webpage](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/calibrationfiles/locationcolor/). The correction images rae different for the cryogenic and warm missions. These correction images are for compact, point-like sources Rayleigh-Jeans (stellar, Vega-like) spectrum. To apply thse correction images, we need to multiply the value from correction image at the central pixel of target to the observed flux of target from BCD file. This gives the corrected flux value.
+  
 - ### Pixel Phase Correction
+  
 - ### Photometric Calibration
 - ### Aperture Correction
-- ### Flat Fielding
 - ### Linearity Correction
 - ### Outlier Rejection
 
