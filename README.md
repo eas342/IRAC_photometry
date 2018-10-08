@@ -126,10 +126,13 @@ Three of the corrections (array location dependent correction, pixel phase corre
   All these effects can be corrected by using correction images from [IRAC instrument webpage](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/calibrationfiles/locationcolor/). The correction images are different for the cryogenic and warm missions. These correction images are for compact, point-like sources Rayleigh-Jeans (stellar, Vega-like) spectrum. To apply these correction images, we need to multiply the value from correction image at the central pixel of target to the observed flux of target from BCD file. This gives the corrected flux value. The variation in measured fluxes can reach up to 10% peak-to-peak. This is larger than any other source of uncertainty in IRAC calibration.
   
 - ### Pixel Phase Correction
-  Due to the variation of quantum efficiency across a pixel, the measured flux density of a point source depends on the exact loaction where the peak of the point spread function (PSF) falls on a pixel. This effect is most sever in channel 1 and the correction of this effect can be as much as 4% peak-to-peak.
-  To correct for this effect, we can use [correction images](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/20/#_Toc410728308) that are a two dimensional function of pixel-phase.
+  Due to the variation of quantum efficiency across a pixel, the measured flux density of a point source depends on the exact loaction where the peak of the point spread function (PSF) falls on a pixel. This effect is most severe in channel 1 and the correction of this effect can be as much as 4% peak-to-peak. To correct for this effect, we can use [correction images](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/20/#_Toc410728308) that are a two dimensional function of pixel phase.
+  
 - ### Photometric Calibration
+  To obtain an absolute flux calibration, about 11 standard stars in the continuous viewing zone were observed in each instrument campaign. IRAC provides flux calibration constants for each channel that needs to be multipled to the measured flux to obtain calibrated flux. The proper constant cann be found from a [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/17/#_Toc410728305) in the IRAC instrument handbook.
+  
 - ### Aperture Correction
+  
 - ### Linearity Correction
 - ### Outlier Rejection
 
