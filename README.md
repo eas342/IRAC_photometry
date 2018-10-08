@@ -152,5 +152,11 @@ Three of the corrections (array location dependent correction, pixel phase corre
 ## Summary Of Current Tables And Plots
 
 - ### Run Summary
+  As of now, I have run the pipeline 12 times and so, I have 2 csv files and a txt file for 12 runs in the *Reduction_Data_&_Logs* folder. I have run the pipeline for 4 groups of data: cryogenic mission data for HD 165459, warm mission data for HD 165459, cryogenic mission data for BD +60 1753, warm mission data for BD +60 1753. So the runs can be grouped into sets of 4. 
+  - Run 1-4 were test runs. No outliers were rejected and warm mission data did not have mission-specific systematics applied.
+  - Run 5-8 are proper runs for channel 1 data. Which means mission-specific systematics were applied and outliers were rejected in these runs.
+  -Run 9-12 are proper runs for channel 2 data.
+  
 - ### Plots Summary
+  
 - ### Radius Test Table
