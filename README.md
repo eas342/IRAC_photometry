@@ -144,7 +144,22 @@ Three of the corrections (array location dependent correction, pixel phase corre
   The values in parentheses are for warm mission.
   
 - ### Aperture Correction
-  Aperture correction is a correction that compensates for flux that is lost from point source observation. IRAC instrument handbook provides an estimate of aperture corrections based on channel and radius combination used. It can be found from this [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/#_Toc410728317).
+  Aperture correction is a correction that compensates for flux that is lost from point source observation. IRAC instrument handbook provides an estimate of aperture corrections based on channel and radius combination used. It can be found from this [page](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/#_Toc410728317) but I'm providing it here as well:
+  
+  | Radius on source (px) | Background annulus (px) | Channel 1 | Channel 2 | Channel 3 | channel 4 |
+  | --------------------- | ----------------------- | --------- | --------- | --------- | --------- |
+  | infinite              | N/A                     | 0.944     | 0.937     | 0.772     | 0.737     |
+  | 10                    | 12-20                   | 1.000     | 1.000     | 1.000     | 1.000     |
+  | 8                     | 12-20                   | 1.011     | 1.013     | 1.011     | 1.017     |
+  | 6                     | 12-20                   | 1.032     | 1.036     | 1.030     | 1.051     |
+  | 5                     | 12-20                   | 1.047     | 1.048     | 1.054     | 1.064     |
+  | 5                     | 5-10                    | 1.060     | 1.063     | 1.063     | 1.084     |
+  | 4                     | 12-20                   | 1.070     | 1.080     | 1.076     | 1.087     |
+  | 3                     | 12-20                   | 1.112     | 1.112     | 1.118     | 1.213     |
+  | 3                     | 3-7                     | 1.125     | 1.120     | 1.135     | 1.221     |
+  | 2                     | 12-20                   | 1.208     | 1.220     | 1.349     | 1.554     |
+  | 2                     | 2-6                     | 1.215     | 1.233     | 1.366     | 1.568     |
+  
   
 - ### Linearity Correction
   TBD
