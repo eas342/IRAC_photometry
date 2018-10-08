@@ -129,12 +129,25 @@ Three of the corrections (array location dependent correction, pixel phase corre
   Due to the variation of quantum efficiency across a pixel, the measured flux density of a point source depends on the exact loaction where the peak of the point spread function (PSF) falls on a pixel. This effect is most severe in channel 1 and the correction of this effect can be as much as 4% peak-to-peak. To correct for this effect, we can use [correction images](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/20/#_Toc410728308) that are a two dimensional function of pixel phase.
   
 - ### Photometric Calibration
-  To obtain an absolute flux calibration, about 11 standard stars in the continuous viewing zone were observed in each instrument campaign. IRAC provides flux calibration constants for each channel that needs to be multipled to the measured flux to obtain calibrated flux. The proper constant cann be found from a [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/17/#_Toc410728305) in the IRAC instrument handbook.
+  To obtain an absolute flux calibration, about 11 standard stars in the continuous viewing zone were observed in each instrument campaign. IRAC provides flux calibration constants for each channel that needs to be multipled to the measured flux to obtain calibrated flux. The proper constant can be found from a [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/17/#_Toc410728305) in the IRAC instrument handbook.
   
 - ### Aperture Correction
+  Aperture correction is a correction that compensates for flux that is lost from point source observation. IRAC instrument handbook provides an estimate of aperture corrections based on channel and radius combination used. It can be found from this [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/#_Toc410728317).
   
 - ### Linearity Correction
+  
 - ### Outlier Rejection
+  Outliers are rejected per AOR by rejecting the maximum and minimum flux values if the spread of distribution is greater than 2% and the AOR has at least 10 files to work with. If you wish to do sigma clipping, you can do so using the `functions.py` script:
+  ```python
+  import functions as func
+  new_array, mask = func.sigma_clipping(array, N)  
+  ```
+  Where,
+  - **array** : Set of data you want to perform sigma clipping on. Type = Array/list
+  - **N** : Number of sigmas to be used for clipping. Data will be clipped by N*sigma. Type = int/float
+  - **new_array** : Outlier rejected array. Type = Array
+  - **mask** : Mask that was used to clip the original *array*. It contains boolean values and has the same length as *array*. Type = Array
+  
 
 ## Summary Of Current Tables And Plots
 
