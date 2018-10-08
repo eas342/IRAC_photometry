@@ -133,12 +133,14 @@ Three of the corrections (array location dependent correction, pixel phase corre
   
 - ### Photometric Calibration
   To obtain an absolute flux calibration, about 11 standard stars in the continuous viewing zone were observed in each instrument campaign. IRAC provides flux calibration constants for each channel that needs to be multipled to the measured flux to obtain calibrated flux. The proper constant can be found from a [table](http://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/17/#_Toc410728305) in the IRAC instrument handbook but I am providing it here as well:
+  
   | Channel | Constant (MJy/sr)/(DN/sec) |
-  | --- | --- |
-  | 1 | 0.1088 (0.1253) |
-  | 2 | 0.1388 (0.1469) |
-  | 3 | 0.5952 |
-  | 4 | 0.2021 |
+  | ------- | -------------------------- |
+  | 1       | 0.1088 (0.1253)            |
+  | 2       | 0.1388 (0.1469)            |
+  | 3       | 0.5952                     |
+  | 4       | 0.2021                     |
+  
   The values in parentheses are for warm mission.
   
 - ### Aperture Correction
