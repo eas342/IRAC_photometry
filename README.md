@@ -78,8 +78,16 @@ This repository provides a pipeline that performs high-precision photometric red
       sky = SkyCoord('00:42.5 +41:12', unit=(u.hourangle, u.deg))
       ```
     - **r, rIn, rOut**: The pipeline performs photometry using _photutils_ aperture photomotery where a circular aperture is used for source and circular annulus aperture is used for background. r, rIn and rOut are source aperture radius, inner background aperture radius and outer background aperture radius respectively. They can be _int_ or _float_.
-    - **ap_corr**: This is the aperture correction factor (_float_). It depends on the radius combination (r, rIn, rOut) and IRAC channel. You can find the proper correction factor from table 4.7 in this [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/).
-    - **pixArea**: Pixel size (_float_) in arcseconds("). Find the appropriate pixel size from table 2.1 in the [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/). 
+    - **ap_corr**: This is the aperture correction factor (_float_). It depends on the radius combination (r, rIn, rOut) and IRAC channel. You can find the proper correction factor from the table provided in [Aperture Correction](#aperture-correction) section.
+    - **pixArea**: Pixel size (_float_) in arcseconds("). Find the appropriate pixel size from this [table](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/):
+    
+    | Channel | Pixel Size (") |
+    | ------- | -------------- |
+    | 1       | 1.221          |
+    | 2       | 1.213          |
+    | 3       | 1.222          |
+    | 4       | 1.220          |
+    
     - **mission**: Two possible values (_string_) -'Cryogenic' or 'Warm' (That exact spelling and case). The AORs you provide must all be from the cryogenic mission or the warm mission; it can't take mixed AORs. The spitzer cryogenic mission ended on May 15th, 2009. So, sort input AORs based on that date. 
     - **channel**: Four possible values (_int_) - 1,2,3 or 4. This is the irac channel that was used to collect data. 
     - **N**: Outlier rejection factor. If the value is 'n/a', no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
@@ -110,8 +118,16 @@ This repository provides a pipeline that performs high-precision photometric red
     - **Inner Background Radius**: Inner background aperture in native pixel. (eg. 12 px)
     - **Outer Background Radius**: Outer Background aperture in native pixel. (eg. 20 px)
     - **Channel#**: 1,2,3 or 4. IRAC channel that was used to collect data.
-    - **Aperture Correction Factor**: A constant factor that depends on the radius combination and IRAC channel. You can find it from table 4.7 in this [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/).
-    - **Pixel Size**: Size of a pixel in arcseconds("). Find the appropriate pixel size from table 2.1 in the [instrument handbook](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/).
+    - **Aperture Correction Factor**: A constant factor that depends on the radius combination and IRAC channel. You can find it from the table provided in [Aperture Correction](#aperture-correction).
+    - **Pixel Size**: Size of a pixel in arcseconds("). Find the appropriate pixel size from this [table](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/):
+    
+    | Channel | Pixel Size (") |
+    | ------- | -------------- |
+    | 1       | 1.221          |
+    | 2       | 1.213          |
+    | 3       | 1.222          |
+    | 4       | 1.220          |
+    
     - **Run#**: For output file name. Should be an integer. This number is what goes into "run?_aor_data.csv". So if you don't want the data to be overwritten, use a new run number.
     - **Outlier Rejection**: If the value is *n/a*, no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
     - **Comments**: Write anything that you would want to include in the log.  
@@ -122,7 +138,7 @@ This repository provides a pipeline that performs high-precision photometric red
 
 ## Systematics Being Applied Through The Pipeline
 
-Three of the corrections (array location dependent correction, pixel phase correction and photometric calibration) are applied using [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/) for cryogenic mission and [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/) for warm mission. The BCD/CBCD files are flat fielded and linearity corrected through Spitzer Science Center's BCD pipeline.
+Three of the corrections (array location dependent correction, pixel phase correction and photometric calibration) are applied using [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/) for cryogenic mission and [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/) for warm mission. You can find these files in the *Correction_files* folder. The BCD/CBCD files are flat fielded and linearity corrected through Spitzer Science Center's BCD pipeline.
 
 - ### Array Location Dependent Correction
   This is a correction that is required for point source photometry or compact sources. IRAC flatfield is made by imaging the high surface brightness zodical background (ZB). Firstly, since the ZB is extended and effectively uniform over the IRAC FOV, its effective gain is slightly different from a point source effective gain. Secondly, spectrum of the ZB peaks redward of the IRAC filters while spectrum of high color temerature sources like stars peak blueward of IRAC filters and are well on the Rayleigh-Jeans side of blackbody spectrum. Thus, IRAC photometry of warm sources require a correction for the spectral slope change between zodical light and Rayleigh-Jeans spectra. Lastly, the effective filter bandpass of IRAC varies as a function of angle of incidence. Thus, all objects in the IRAC FOV needs to be corrected based on their location on the array.  
