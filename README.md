@@ -55,7 +55,7 @@ This repository provides a pipeline that performs high-precision photometric red
 
 - ### From Script
   - #### Calling sequence
-    The pipeline can be called from a script or an IDL like a python module (provided that AOR_pipeline.py is in the same folder as the script or its path is specified). Here is an example:
+    The pipeline can be called from a script or an IDE like a python module (provided that AOR_pipeline.py is in the same folder as the script or its path is specified). Here is an example:
     ```python
     import AOR_Pipeline as pipeline
     aor_data, img_data, prob_aor = pipeline.run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, mission, channel, N)
@@ -114,9 +114,9 @@ This repository provides a pipeline that performs high-precision photometric red
     - **Target Name**: Name of target. e.g. HD 165459
     - **Target Coordinates**: Sky coordinates of target in hms for RA and dms for Dec. You can write it as `18 02 30.74 +58 37 38.16`, `18:02:30.74 +58:37:38.16` or `18h02m30.74s +58d37m38.16s`.
     - **Mission**: Cryogenic or Warm. Spelling and case must be as shown.
-    - **Source Aperture Radius**: Source aperture in native pixel. (e.g. 10 px)
-    - **Inner Background Radius**: Inner background aperture in native pixel. (eg. 12 px)
-    - **Outer Background Radius**: Outer Background aperture in native pixel. (eg. 20 px)
+    - **Source Aperture Radius**: Source aperture in native pixel. (e.g. 10)
+    - **Inner Background Radius**: Inner background aperture in native pixel. (eg. 12)
+    - **Outer Background Radius**: Outer Background aperture in native pixel. (eg. 20)
     - **Channel#**: 1,2,3 or 4. IRAC channel that was used to collect data.
     - **Aperture Correction Factor**: A constant factor that depends on the radius combination and IRAC channel. You can find it from the table provided in [Aperture Correction](#aperture-correction).
     - **Pixel Size**: Size of a pixel in arcseconds("). Find the appropriate pixel size from this [table](https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/5/):
