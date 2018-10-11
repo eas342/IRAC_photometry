@@ -61,12 +61,19 @@ def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, imag
         y_values = y_value of center of each image; Type = Array
     """
         
-    #Fitting a gaussian model to each image in image2d list and returning center    
+    #Creating a mesh grid with the shape of image to create model  
     y_pos, x_pos = np.mgrid[:image.shape[0],:image.shape[1]]
+    
+    #defining starting and stopping points for drawing a box to fit the gaussian to
+    xA, yA = int(center_x-box_width), int(center_y-box_width)
+    xB, yB = int(center_x+box_width), int(center_y+box_width) 
+    
+    # fitting the gaussian model
     fit_g = fitting.LevMarLSQFitter()
     gauss2D = models.Gaussian2D(amplitude = amp, x_mean = center_x, y_mean = center_y, x_stddev = x_std, y_stddev = y_std, theta = Theta)
-    g = fit_g(gauss2D,x_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],y_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],image[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width])
-    g1 = fit_g(g,x_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],y_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],image[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width])
+    g = fit_g(gauss2D,x_pos[yA:yB,xA:xB],y_pos[yA:yB,xA:xB],image[yA:yB,xA:xB])
+    g1 = fit_g(g,x_pos[yA:yB,xA:xB],y_pos[yA:yB,xA:xB],image[yA:yB,xA:xB])
+    #pdb.set_trace()
     new_xCen = g1.x_mean[0]
     new_yCen = g1.y_mean[0]
     fwhm_x   = g1.x_fwhm
@@ -75,15 +82,15 @@ def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, imag
     if model_plotting == True:
         
         plt.subplot(131)
-        plt.imshow(image[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width])
+        plt.imshow(image[yA:yB,xA:xB])
         plt.title('Data')
         
         plt.subplot(132)
-        plt.imshow(g1(x_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],y_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width]))
+        plt.imshow(g1(x_pos[yA:yB,xA:xB],y_pos[yA:yB,xA:xB]))
         plt.title('Model')
         
         plt.subplot(133)
-        plt.imshow(image[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width] - g1(x_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width],y_pos[center_y-box_width:center_y+box_width,center_x-box_width:center_x+box_width]))
+        plt.imshow(image[yA:yB,xA:xB] - g1(x_pos[yA:yB,xA:xB],y_pos[yA:yB,xA:xB]))
         plt.title('Residual')
     
     #Results
@@ -121,14 +128,16 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
             pix = targetCrd.to_pixel(w)
         except:
             crd_conversion = 'O'
+            data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
             continue
 
         if (pix[0]>0) & (pix[0]<256) & (pix[1]>0) & (pix[1]<256):
-         
+            
             try:
                 cenX, cenY, fx, fy = gen_center_g2d(pix[0], pix[1], 7, 5, 4, 4, 0, image)
             except:
                 centroiding = 'O'
+                data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
                 continue
 
             if (np.abs(cenX - pix[0]) <= 2) & (np.abs(cenY-pix[1]) <= 2):
