@@ -44,7 +44,7 @@ def photometry(image2d, cen_x, cen_y, index = 0, shape = 'Circ', rad = None, r_i
 
 
 
-def gen_center_g2d(center_x, center_y, box_width, amp, x_std, y_std, Theta, image, model_plotting = False):
+def gen_center_g2d(image, center_x, center_y, box_width, amp, x_std, y_std, Theta, model_plotting = False):
     
     """
     PARAMETERS:
@@ -134,7 +134,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         if (pix[0]>0) & (pix[0]<256) & (pix[1]>0) & (pix[1]<256):
             
             try:
-                cenX, cenY, fx, fy = gen_center_g2d(pix[0], pix[1], 7, 5, 4, 4, 0, image)
+                cenX, cenY, fx, fy = gen_center_g2d(image, pix[0], pix[1], 7, 5, 4, 4, 0)
             except:
                 centroiding = 'O'
                 data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
