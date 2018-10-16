@@ -14,16 +14,15 @@ from datetime import datetime
 
 #Creating a table generating function that can be called from scripts
 #---------------------------------------------------------------------
-def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N):
+def run(AORs, sky, r, rIn, rOut, ap_corr, pixLen, channel, N):
     #initializing table to hold results
-    result = Table(names = ('AORKEY', 'DateObs', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
+    result = Table(names = ('AORKEY', 'DateObs', 'Mission', 'Read Mode', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S5', 'S5', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
 
     problem = []
 
     #Generate data for each aor
     for i, aor in tqdm(enumerate(AORs)):
-
         
         #Performing photometry on every image in an AOR
         if len(aor)>0:
@@ -41,20 +40,21 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N):
 
         #Defining every table element except for flux terms
         #..................................................
-        aKey    = header['AORKEY']
-        dObs    = header['DATE_OBS']
-        DPat    = 'YES' if 'cycl'in header['AORLABEL'] else 'NO'
-        fTim    = header['FRAMTIME']
-        time    = header['MJD_OBS']
-        mission = 'Cryogenic' if (time<=54968) else 'Warm'
+        aKey = header['AORKEY']
+        dObs = header['DATE_OBS']
+        dPat = 'YES' if 'cycl'in header['AORLABEL'] else 'NO'
+        fTim = header['FRAMTIME']
+        time = header['MJD_OBS']
+        mssn = 'CRYO' if (time<=54968) else 'WARM'
+        mode = header['READMODE']
         try:
-            DScl = header['DITHSCAL']
+            dScl = header['DITHSCAL']
         except:
-            DScl = '--'
+            dScl = '--'
         try:
-            DPos = str(header['DITHPOS'])
+            dPos = str(header['DITHPOS'])
         except:
-            DPos = '--'
+            dPos = '--'
         #...................................................
         
 
@@ -68,10 +68,17 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N):
             idl.setVariable('cenY', Yc)
             idl.setVariable('obsFlux', Res_Flux)
             idl.setVariable('ch', channel)
-            if mission == 'Warm':
-                idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
+            
+            if mode == 'SUB':
+                if mssn == 'CRYO':
+                    idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch, /CRYO, /SUBARRAY)')
+                else:
+                    idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch, /SUBARRAY)')
             else:
-                idl.execute('corFlux = IRAC_APHOT_CORR_CRYO(obsFlux, cenX, cenY, ch)')
+                if mssn =='CRYO':
+                    idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch, /CRYO)')
+                else:
+                    idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
             corFlux = idl.getVariable('corFlux')
             corFlux = np.array(corFlux).astype('Float64')
         else:
@@ -98,6 +105,7 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N):
         flux_bUnit = refFlux*ap_corr  #Flux in bad units (MJy/Sr)!
 
         #Fluxes in proper units (mJy)
+        pixArea = (pixLen**2)/(206265**2) #Steradian
         flux_arr = flux_bUnit*(pixArea*(10**9))
 
         #Analysis
@@ -107,7 +115,7 @@ def run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N):
         #........................
 
         
-        result.add_row([aKey, dObs, DPat, DScl, DPos, fTim, time, flux, error, spread, clipped])
+        result.add_row([aKey, dObs, mssn, mode, dPat, dScl, dPos, fTim, time, flux, error, spread, clipped])
     
     return result, cum_data, problem
 
@@ -120,7 +128,7 @@ if __name__=='__main__':
     #Defining general constants
     #---------------------------
 
-    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Name (e.g. HD 165459)\n', '4. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n', '5. Readout Mode (e.g. full or sub)\n','6. Source Aperture Radius in px (eg. 10) \n', '7. Inner Background Radius in px (eg. 12) \n', '8. Outer Background Radius in px (eg. 20) \n', '9. Channel# (1,2,3 or 4) \n', '10. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '11. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '12. Run# (For output file name. Should be an integer)\n', '13. Sigma Clipping Number (e.g. 10) \n', '14. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;full;10;12;20;1;1.0;1.221;5;10;Your comment goes here. \n', '\n'
+    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Name (e.g. HD 165459)\n', '4. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n','5. Source Aperture Radius in px (eg. 10) \n', '6. Inner Background Radius in px (eg. 12) \n', '7. Outer Background Radius in px (eg. 20) \n', '8. Channel# (1,2,3 or 4) \n', '9. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '10. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '11. Run# (For output file name. Should be an integer)\n', '12. Sigma Clipping Number (e.g. 10) \n', '13. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;10;12;20;1;1.0;1.221;5;10;Your comment goes here. \n', '\n'
 
     const_str = raw_input('Input the parameters listed above: ') 
     constants = const_str.split(';')
@@ -153,8 +161,6 @@ if __name__=='__main__':
     ap_corr = float(constants[9])
 
     pixLen  = float(constants[10]) #arcsec
-    pixArea = pixLen**2 #arcsec^2
-    pixArea = pixArea/(206265**2) #Steradian
 
     N = constants[12] #For outlier rejection
 
@@ -162,7 +168,7 @@ if __name__=='__main__':
     
     
     #Generating & writing data tables to csv files
-    res, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N)
+    res, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixLen, channel, N)
     ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[11], delimiter = ',', overwrite = True)
     ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[11], delimiter = ',', overwrite = True) 
 
