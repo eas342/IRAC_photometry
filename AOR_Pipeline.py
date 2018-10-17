@@ -14,24 +14,31 @@ from datetime import datetime
 
 #Creating a table generating function that can be called from scripts
 #---------------------------------------------------------------------
-def run(AORs, crdFormat, crd, r, rIn, rOut, ap_corr, pixLen, channel, N):
+def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N):
     #initializing table to hold results
     result = Table(names = ('AORKEY', 'DateObs', 'Mission', 'Read Mode', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S5', 'S5', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
 
     problem = []
     
-    #Correcting format of target coordinates
+    #Putting coordinates and filepaths in the correct format
     if crdFormat.lower() == 'single hms':
-        skyList = [SkyCoord(crd, unit=(u.hourangle, u.deg))]*len(AORs)
+        skyList = [SkyCoord(aor_crd[1], unit=(u.hourangle, u.deg))]*len(aor_crd[0])
+        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in aor_crd[0]]
     elif crdFormat.lower() == 'single deg':
-        skyList = [SkyCoord(crd, unit=u.deg)]*len(AORs)
+        skyList = [SkyCoord(aor_crd[1], unit=u.deg)]*len(aor_crd[0])
+        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in aor_crd[0]]
     elif crdFormat.lower() == 'multiple hms':
-        skyTable = ascii.read(crd)
-        skyList = [SkyCoord(st, unit=(u.hourangle, u.deg)) for st in skyTable]
+        skyTable = ascii.read(aor_crd)
+        skyList = [SkyCoord(st, unit=(u.hourangle, u.deg)) for st in skyTable['Target Coordinates']]
+        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in skyTable['AOR Filepath']]
     elif crdFormat.lower() == 'multiple deg':
-        skyTable = ascii.read(crd)
-        skyList = [SkyCoord(st, unit=u.deg) for st in skyTable]
+        skyTable = ascii.read(aor_crd)
+        skyList = [SkyCoord(st, unit=u.deg) for st in skyTable['Target Coordinates']]
+        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in skyTable['AOR Filepath']]
+    else:
+        print('Please input one of these 4 values for crdFormat: single hms, single deg, multiple hms, multiple deg')
+        return
 
     #Generate data for each aor
     for i, (aor, sky) in tqdm(enumerate(zip(AORs, skyList))):
