@@ -1,0 +1,9 @@
+Date Reduced : 2018-10-18T14:59:19.925499 
+Command Used : single hms;/data1/phot_cal/spitzer/hd165459/cryo/r11638016,18 02 30.7410086899 +58 37 38.157415821;bcd;HD 165459;10;12;20;1;1.0;1.221;14;10;Your comment goes here. 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Target       : HD 165459 
+Radius Used  : src_r-10, bkg_in-12, bkg_out-20 
+Average Flux : 643.62 +- 0.00 
+Problem AORs : 
+Comments     : Your comment goes here.
