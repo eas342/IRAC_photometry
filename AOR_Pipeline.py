@@ -22,26 +22,35 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
     problem = []
     
     #Putting coordinates and filepaths in the correct format
+    #........................................................
     if crdFormat.lower() == 'single hms':
-        skyList = [SkyCoord(aor_crd[1], unit=(u.hourangle, u.deg))]*len(aor_crd[0])
-        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in aor_crd[0]]
+        AORs    = glob.glob(aor_crd[0])
+        skyList = [SkyCoord(aor_crd[1], unit=(u.hourangle, u.deg))]*len(AORs)
+        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in AORs]
+        
     elif crdFormat.lower() == 'single deg':
-        skyList = [SkyCoord(aor_crd[1], unit=u.deg)]*len(aor_crd[0])
-        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in aor_crd[0]]
+        AORs    = glob.glob(aor_crd[0])
+        skyList = [SkyCoord(aor_crd[1], unit=u.deg)]*len(AORs)
+        aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in AORs]
+        
     elif crdFormat.lower() == 'multiple hms':
         skyTable = ascii.read(aor_crd)
         skyList = [SkyCoord(st, unit=(u.hourangle, u.deg)) for st in skyTable['Target Coordinates']]
         aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in skyTable['AOR Filepath']]
+        
     elif crdFormat.lower() == 'multiple deg':
         skyTable = ascii.read(aor_crd)
         skyList = [SkyCoord(st, unit=u.deg) for st in skyTable['Target Coordinates']]
         aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in skyTable['AOR Filepath']]
+        
     else:
         print('Please input one of these 4 values for crdFormat: single hms, single deg, multiple hms, multiple deg')
         return
+    #..........................................................
+    
 
     #Generate data for each aor
-    for i, (aor, sky) in tqdm(enumerate(zip(AORs, skyList))):
+    for i, (aor, sky) in tqdm(enumerate(zip(aorList, skyList))):
         
         #Performing photometry on every image in an AOR
         if len(aor)>0:
@@ -147,63 +156,42 @@ if __name__=='__main__':
     #Defining general constants
     #---------------------------
 
-    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. File Path up to aor names (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*/) \n', '2. File type (eg. bcd) \n', '3. Target Name (e.g. HD 165459)\n', '4. Target Coordinates (e.g. 18 02 30.7410086899 +58 37 38.157415821) \n','5. Source Aperture Radius in px (eg. 10) \n', '6. Inner Background Radius in px (eg. 12) \n', '7. Outer Background Radius in px (eg. 20) \n', '8. Channel# (1,2,3 or 4) \n', '9. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '10. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '11. Run# (For output file name. Should be an integer)\n', '12. Sigma Clipping Number (e.g. 10) \n', '13. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;10;12;20;1;1.0;1.221;5;10;Your comment goes here. \n', '\n'
+    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. Coordinate format (e.g. single hms, single deg, multiple hms, multiple deg) \n', '2. AOR file path and coordinates (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*,18 02 30.7410086899 +58 37 38.157415821 \n', '3. File type (eg. bcd, cbcd, sub2d) \n', '4. Target Name (e.g. HD 165459, BD + 60 1753) \n','5. Source Aperture Radius in px (eg. 10) \n', '6. Inner Background Radius in px (eg. 12) \n', '7. Outer Background Radius in px (eg. 20) \n', '8. Channel# (1,2,3 or 4) \n', '9. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '10. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '11. Run# (For output file name. Should be an integer)\n', '12. Sigma Clipping Number (e.g. 10) \n', '13. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: /data1/phot_cal/spitzer/hd165459/cryo/r*/;bcd;HD 165459;18 02 30.7410086899 +58 37 38.157415821;10;12;20;1;1.0;1.221;5;10;Your comment goes here. \n', '\n'
 
     const_str = raw_input('Input the parameters listed above: ') 
     constants = const_str.split(';')
     print constants
 
-    if '*' in constants[0]:
-        AORnames = np.sort(glob.glob(constants[0]))
-    else:
-        AORnames = constants[0].split(',')
-        
-    AORs = []
-
-    for aor in AORnames:
-        fnames = np.sort(glob.glob(aor + 'ch' + constants[8] + '/' + constants[1] + '/*_' + constants[1] + '.fits'))
-        AORs.append(fnames)
-
-
-    #Provide proper sky coordinates in hms
-    # '18 02 30.7410086899 +58 37 38.157415821' for HD 165459
-    # '17 24 52.2772360943 +60 25 50.780790994' for BD +60 1753
-    sky = SkyCoord(constants[3], unit=(u.hourangle, u.deg))
-    
-    r, rIn, rOut = int(constants[5]), int(constants[6]), int(constants[7])
-    
-    channel = int(constants[8])
-
-    # Find the aperture correction factor from the following link:
-    # https://irsa.ipac.caltech.edu/data/SPITZER/docs/irac/iracinstrumenthandbook/27/
-    # From the table at the end of that link, select your value accoring to your aperture size and channel
-    ap_corr = float(constants[9])
-
-    pixLen  = float(constants[10]) #arcsec
-
-    N = constants[12] #For outlier rejection
+    crdFormat    = constants[0] 
+    aor_crd      = constants[1] if 'csv' in constants[0] else constants[1].split(',') 
+    filetype     = constants[2].lower()
+    r, rIn, rOut = int(constants[4]), int(constants[5]), int(constants[6])
+    channel      = int(constants[7])
+    ap_corr      = float(constants[8])
+    pixLen       = float(constants[9]) #arcsec
+    N            = constants[11] #For outlier rejection
 
     #----------------------------
     
     
     #Generating & writing data tables to csv files
-    res, data, prob = run(AORs, sky, r, rIn, rOut, ap_corr, pixLen, channel, N)
-    ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[11], delimiter = ',', overwrite = True)
-    ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[11], delimiter = ',', overwrite = True) 
+    res, data, prob = run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
+    ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[10], delimiter = ',', overwrite = True)
+    ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[10], delimiter = ',', overwrite = True) 
 
 
 
     #Writing a txt file that keeps log about this reduction run
     #----------------------------------------------------------
-    log = open('Reduction_Data_&_Logs/run%s_log.txt' % constants[11], 'w')
+    log = open('Reduction_Data_&_Logs/run%s_log.txt' % constants[10], 'w')
     log.write("Date Reduced : %s \n" % datetime.now().isoformat())
     log.write("Command Used : %s \n" % const_str)
-    log.write("Instrument   : IRAC Channel %s \n" % constants[8])
-    log.write("File Type    : %s \n" % constants[1].upper())
-    log.write("Target       : %s \n" % constants[2])
+    log.write("Instrument   : IRAC Channel %i \n" % channel)
+    log.write("File Type    : %s \n" % filetype.upper())
+    log.write("Target       : %s \n" % constants[3])
     log.write("Radius Used  : src_r-%i, bkg_in-%i, bkg_out-%i \n" % (r, rIn, rOut))
     log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(res['Flux (mJy)']), np.std(res['Flux (mJy)'])))
     log.write("Problem AORs : " + ("%i "*len(prob) % tuple(prob)) + "\n")
-    log.write("Comments     : %s" % constants[13])
+    log.write("Comments     : %s" % constants[12])
     log.close()
     #----------------------------------------------------------
