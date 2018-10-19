@@ -114,7 +114,7 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
                 else:
                     idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
             corFlux = idl.getVariable('corFlux')
-            corFlux = [corFlux] if type(corFlux)==float else np.array(corFlux).astype('Float64')
+            corFlux = np.array([corFlux]) if type(corFlux)==float else np.array(corFlux).astype('Float64')
         else:
             problem.append(aKey)
             continue
