@@ -50,12 +50,11 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
         return
     #..........................................................
     
-
+    counter = 0
     #Generate data for each aor
     for i, (aor, sky) in tqdm(enumerate(zip(aorList, skyList))):
         
-        #Performing photometry on every image in an AOR
-        counter = 0
+        #Performing photometry on every image in an AOR=
         if len(aor)>0:
             data, header = func.single_target_phot(aor, sky, r, rIn, rOut)
             counter += 1
@@ -115,7 +114,7 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
                 else:
                     idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
             corFlux = idl.getVariable('corFlux')
-            corFlux = np.array(corFlux).astype('Float64')
+            corFlux = [corFlux] if type(corFlux)==float else np.array(corFlux).astype('Float64')
         else:
             problem.append(aKey)
             continue
@@ -180,7 +179,6 @@ if __name__=='__main__':
 
     #----------------------------
     
-    pdb.set_trace()
     #Generating & writing data tables to csv files
     res, data, prob = run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
     ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[10], delimiter = ',', overwrite = True)
@@ -197,7 +195,6 @@ if __name__=='__main__':
     log.write("File Type    : %s \n" % filetype.upper())
     log.write("Target       : %s \n" % constants[3])
     log.write("Radius Used  : src_r-%i, bkg_in-%i, bkg_out-%i \n" % (r, rIn, rOut))
-    log.write("Average Flux : %.2f +- %.2f \n" % (np.mean(res['Flux (mJy)']), np.std(res['Flux (mJy)'])))
     log.write("Problem AORs : " + ("%s "*len(prob) % tuple(prob)) + "\n")
     log.write("Comments     : %s" % constants[12])
     log.close()
