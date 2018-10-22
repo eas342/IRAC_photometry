@@ -83,11 +83,11 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
         tCrd = str(sky).replace(')','(').split('(')[-2] 
         try:
             dScl = header['DITHSCAL']
-        except:
+        except KeyError:
             dScl = '--'
         try:
             dPos = str(header['DITHPOS'])
-        except:
+        except KeyError:
             dPos = '--'
         #...................................................
         

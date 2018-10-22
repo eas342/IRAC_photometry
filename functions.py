@@ -7,6 +7,7 @@ from astropy.io import fits, ascii
 from astropy.table import Table, Column
 from astropy.modeling import models, fitting
 from astropy.wcs import WCS
+from astropy.wcs.wcs import NoConvergence
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 
@@ -126,7 +127,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         try:
             w = WCS(header)
             pix = targetCrd.to_pixel(w)
-        except:
+        except (ValueError, NoConvergence):
             crd_conversion = 'O'
             data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
             continue
@@ -135,7 +136,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
             
             try:
                 cenX, cenY, fx, fy = gen_center_g2d(image, pix[0], pix[1], 7, 5, 4, 4, 0)
-            except:
+            except TypeError:
                 centroiding = 'O'
                 data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
                 continue
@@ -155,6 +156,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
                     
 
                 except:
+                    pdb.set_trace()
                     continue
 
             else:
