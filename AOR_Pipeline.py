@@ -14,7 +14,7 @@ from datetime import datetime
 
 #Creating a table generating function that can be called from scripts
 #---------------------------------------------------------------------
-def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N):
+def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, N):
     #initializing table to hold results
     result = Table(names = ('AORKEY', 'Target Coordinates', 'DateObs', 'Mission', 'Read Mode', 'Workable/Total Files in AOR', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S25', 'S5', 'S5', 'S10', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
@@ -23,23 +23,23 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
     
     #Putting coordinates and filepaths in the correct format
     #........................................................
-    if crdFormat.lower() == 'single hms':
+    if crdFormat.lower() == 'single_hms':
         AORs    = glob.glob(aor_crd[0])
         skyList = [SkyCoord(aor_crd[1], unit=(u.hourangle, u.deg))]*len(AORs)
         aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in AORs]
         
-    elif crdFormat.lower() == 'single deg':
+    elif crdFormat.lower() == 'single_deg':
         AORs    = glob.glob(aor_crd[0])
         skyList = [SkyCoord(aor_crd[1], unit=u.deg)]*len(AORs)
         aorList = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in AORs]
         
-    elif crdFormat.lower() == 'multiple hms':
+    elif crdFormat.lower() == 'multiple_hms':
         skyTable = ascii.read(aor_crd)
         AORs     = skyTable['AOR Filepath']
         skyList  = [SkyCoord(st, unit=(u.hourangle, u.deg)) for st in skyTable['Target Coordinates']]
         aorList  = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in AORs]
         
-    elif crdFormat.lower() == 'multiple deg':
+    elif crdFormat.lower() == 'multiple_deg':
         skyTable = ascii.read(aor_crd)
         AORs     = skyTable['AOR Filepath']
         skyList  = [SkyCoord(st, unit=u.deg) for st in skyTable['Target Coordinates']]
@@ -120,7 +120,7 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
             corFlux = np.array([corFlux]) if type(corFlux)==float else np.array(corFlux).astype('Float64')
         else:
             problem.append(aKey)
-            result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, np.nan, np.nan, np.nan, np.nan])
+            result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, np.nan, np.nan, np.nan, 0])
             continue
         #.................................
         
@@ -169,7 +169,40 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add
+    
+    #crdFormat
+    parser.add_argument('crdFormat', nargs = 1, help = 'A string that specifies format that specifies the format of target coordinate. It tells the unit of your coordinate and whether you want to work with one or more than one corrdinate. It can take in single_hms, single_deg, multiple_hms or multiple_hms as values. The values are not case sensitive.')
+    
+    #aor_crd
+    parser.add_argument('aor_crd', nargs = '+', help = 'AOR filepaths and coordinates. It can be individual file path with a single coordinate or a text file containing those information. See github documentation for more on formatting and examples')
+    
+    #filetype
+    parser.add_argument('-f', '--file-type', dest = 'filetype', nargs = '?', const = 'bcd', default = 'bcd', help = 'Which file type to use - bcd, cbcd, sub2d etc.')
+    
+    #radius combination
+    parser.add_argument('-r', '--radius', nargs = 3, default = [10, 12, 20], help = 'Radius combination. Takes 3 arguments, int or float. Source aperture radius, inner and outer background aperture radius.')
+    
+    #ap_corr
+    parser.add_argument('-a', '--aperture-correction', dest = 'ap_corr', nargs = '?', const = 1.000, default = 1.000, type = float, help = 'Aperture correction for a particular radius combination. Proper values can be found from github documenation. Defaults to 1.0 when not specified')
+    
+    #channel + pixLen
+    parser.add_argument('-cp', '--ch-px', dest = 'ch_px', nargs = 2, default = [1, 1.221], help = 'Two arguments. Channel number and length of a pixel for that channel. defaults to channel 1 values.')
+    
+    #Outlier Rejection
+    parser.add_argument('-o', '--outlier-rejection', dest = 'sigma', action = 'store_true', help = 'Whether you want outlier rejection or not')
+    
+    #Run Number
+    parser.add_argument('-rn', '--run-number', dest = 'run', nargs = '?', const = 100, default = 100, help = 'Run number for naming output files')
+    
+    #Target Name
+    parser.add_argument('-t', '--target-name', dest = 'target', nargs = '?', const = 'Many', default = 'Many', help = 'Name of target or targets. This will be included in the log file.')
+    
+    #Comments
+    parser.add_argument('-c', '--comments', nargs = argparse.REMAINDER, default = 'No comment was specified.', help = 'Comments about the run that will be included in the log file')
+    
+    args = parser.parse_args()
+    
+    return args
 
 #-------------------------------------------------------------
 
@@ -178,6 +211,11 @@ def parse_arguments():
 
 
 if __name__=='__main__':
+    
+    print('This is the new command line interface')
+    args = parse_arguments()
+    #pdb.set_trace()
+    """
     
     #Defining general constants
     #---------------------------
@@ -219,3 +257,4 @@ if __name__=='__main__':
     log.write("Comments     : %s" % constants[12])
     log.close()
     #----------------------------------------------------------
+    """

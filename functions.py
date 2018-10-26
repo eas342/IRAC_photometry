@@ -142,22 +142,17 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
                 continue
 
             if (np.abs(cenX - pix[0]) <= 2) & (np.abs(cenY-pix[1]) <= 2):
-                try:
-                    # Extracting raw flux
-                    raw_flux, src_ap = photometry(image, [cenX], [cenY], rad = src_r)
+                
+                # Extracting raw flux
+                raw_flux, src_ap = photometry(image, [cenX], [cenY], rad = src_r)
 
-                    # Extrating a mean background flux
-                    bkg, bkg_ap = photometry(image, [cenX], [cenY], shape = 'CircAnn', r_in = bkg_rIn, r_out = bkg_rOut)
-                    bkg_mean = bkg/bkg_ap.area()
-                    bkg_flux = bkg_mean*src_ap.area()
+                # Extrating a mean background flux
+                bkg, bkg_ap = photometry(image, [cenX], [cenY], shape = 'CircAnn', r_in = bkg_rIn, r_out = bkg_rOut)
+                bkg_mean = bkg/bkg_ap.area()
+                bkg_flux = bkg_mean*src_ap.area()
 
-                    # Subtracting background
-                    res_flux  = raw_flux - bkg_flux
-                    
-
-                except:
-                    pdb.set_trace()
-                    continue
+                # Subtracting background
+                res_flux  = raw_flux - bkg_flux
 
             else:
                 bad_cen_guess = 'O'
