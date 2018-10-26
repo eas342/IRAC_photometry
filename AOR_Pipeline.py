@@ -1,6 +1,6 @@
 import numpy as np
 import functions as func
-import pdb, glob
+import pdb, glob, argparse
 import mirpyidl as idl
 from tqdm import tqdm
 from astropy.table import Table, vstack
@@ -16,7 +16,7 @@ from datetime import datetime
 #---------------------------------------------------------------------
 def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N):
     #initializing table to hold results
-    result = Table(names = ('AORKEY', 'Target Coordinates', 'DateObs', 'Mission', 'Read Mode', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S25', 'S5', 'S5', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
+    result = Table(names = ('AORKEY', 'Target Coordinates', 'DateObs', 'Mission', 'Read Mode', 'Workable/Total Files in AOR', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S25', 'S5', 'S5', 'S10', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
 
     problem = []
@@ -69,24 +69,30 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
             cum_data = data
         else:
             cum_data = vstack([cum_data, data])
+            
+        #Getting relevant information from data table 
+        Xc       = data['Xc'][np.isnan(np.array(data['Xc']).astype('Float64')) == False]
+        Yc       = data['Yc'][np.isnan(np.array(data['Yc']).astype('Float64')) == False]
+        Res_Flux = data['Res_Flux'][np.isnan(np.array(data['Res_Flux']).astype('Float64')) == False]
 
 
         #Defining every table element except for flux terms
         #..................................................
-        aKey = header['AORKEY']
-        dObs = header['DATE_OBS']
-        dPat = 'YES' if 'cycl'in header['AORLABEL'] else 'NO'
-        fTim = header['FRAMTIME']
-        time = header['MJD_OBS']
-        mssn = 'CRYO' if (time<=54968) else 'WARM'
-        mode = header['READMODE']
-        tCrd = str(sky).replace(')','(').split('(')[-2] 
+        aKey = header['AORKEY']                                      #AORKEY
+        dObs = header['DATE_OBS']                                    #Date of observation in UT
+        dPat = 'YES' if 'cycl'in header['AORLABEL'] else 'NO'        #Dither pattern
+        fTim = header['FRAMTIME']                                    #frame time in sec
+        time = header['MJD_OBS']                                     #Date of observation in MJD
+        mssn = 'CRYO' if (time<=54968) else 'WARM'                   #Spitzer mission
+        mode = header['READMODE']                                    #Readout mode: full or sub
+        fLen = '%i/%i' % (len(Res_Flux), len(aor))                   #workable file/total file
+        tCrd = str(sky).replace(')','(').split('(')[-2]              #Target coordinate
         try:
-            dScl = header['DITHSCAL']
+            dScl = header['DITHSCAL']                                #Dither scale: small, medium or large
         except KeyError:
             dScl = '--'
         try:
-            dPos = str(header['DITHPOS'])
+            dPos = str(header['DITHPOS'])                            #Dither position
         except KeyError:
             dPos = '--'
         #...................................................
@@ -94,9 +100,6 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
 
         #Using IDL to remove systematics
         #................................
-        Xc       = data['Xc'][np.isnan(np.array(data['Xc']).astype('Float64')) == False]
-        Yc       = data['Yc'][np.isnan(np.array(data['Yc']).astype('Float64')) == False]
-        Res_Flux = data['Res_Flux'][np.isnan(np.array(data['Res_Flux']).astype('Float64')) == False]
         if len(Res_Flux) > 0:
             idl.setVariable('cenX', Xc)
             idl.setVariable('cenY', Yc)
@@ -117,8 +120,10 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
             corFlux = np.array([corFlux]) if type(corFlux)==float else np.array(corFlux).astype('Float64')
         else:
             problem.append(aKey)
+            result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, np.nan, np.nan, np.nan, np.nan])
             continue
         #.................................
+        
 
 
         #Rejecting Outliers
@@ -149,13 +154,28 @@ def run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
         #........................
 
         
-        result.add_row([aKey, tCrd, dObs, mssn, mode, dPat, dScl, dPos, fTim, time, flux, error, spread, clipped])
+        result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, flux, error, spread, clipped])
     
     return result, cum_data, problem
 
 #--------------------------------------------------------------------
 
-    
+
+
+
+
+# Defining a function that parses arguments given in terminal
+#-------------------------------------------------------------
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add
+
+#-------------------------------------------------------------
+
+
+
+
 
 if __name__=='__main__':
     
