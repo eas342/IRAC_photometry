@@ -58,7 +58,7 @@ This repository provides a pipeline that performs high-precision photometric red
     The pipeline can be called from a script or an IDE like a python module (provided that AOR_pipeline.py is in the same folder as the script or its path is specified). Here is an example:
     ```python
     import AOR_Pipeline as pipeline
-    aor_data, img_data, prob_aor = pipeline.run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, mission, channel, N)
+    aor_data, img_data, prob_aor = pipeline.run(AORs, sky, r, rIn, rOut, ap_corr, pixArea, channel, N)
     ```
     The input parameters and outputs are discussed below.
     
@@ -88,7 +88,7 @@ This repository provides a pipeline that performs high-precision photometric red
     | 3       | 1.222          |
     | 4       | 1.220          |
     
-    - **mission**: Two possible values (_string_) -'Cryogenic' or 'Warm' (That exact spelling and case). The AORs you provide must all be from the cryogenic mission or the warm mission; it can't take mixed AORs. The spitzer cryogenic mission ended on May 15th, 2009. So, sort input AORs based on that date. 
+    - **ROMode**:
     - **channel**: Four possible values (_int_) - 1,2,3 or 4. This is the irac channel that was used to collect data. 
     - **N**: Outlier rejection factor. If the value is 'n/a', no outlier rejection will happen. Outlier rejection will happen for any other value you provide.
     
@@ -113,7 +113,7 @@ This repository provides a pipeline that performs high-precision photometric red
     - **File Type**: bcd or cbcd. Must be all lowercase.
     - **Target Name**: Name of target. e.g. HD 165459
     - **Target Coordinates**: Sky coordinates of target in hms for RA and dms for Dec. You can write it as `18 02 30.74 +58 37 38.16`, `18:02:30.74 +58:37:38.16` or `18h02m30.74s +58d37m38.16s`.
-    - **Mission**: Cryogenic or Warm. Spelling and case must be as shown.
+    - **Readout Mode**: full/sub
     - **Source Aperture Radius**: Source aperture in native pixel. (e.g. 10)
     - **Inner Background Radius**: Inner background aperture in native pixel. (eg. 12)
     - **Outer Background Radius**: Outer Background aperture in native pixel. (eg. 20)

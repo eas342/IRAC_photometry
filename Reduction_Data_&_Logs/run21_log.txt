@@ -1,0 +1,8 @@
+Date Reduced     : 2018-10-30T12:54:27.426653 
+Input Parameters : {'run': '21', 'target': 'Upper Sco stars', 'crdFormat': 'multiple_deg', 'aor_crd': ['upperSco_skyCrd.csv'], 'filetype': 'sub2d', 'ap_corr': 1.0, 'comments': 'New terminal structure testing with Uppersco stars that is subarray data from channel 2 and has multiple targets.', 'ch_px': [2.0, 1.213], 'radius': [10, 12, 20], 'sigma': True} 
+Instrument       : IRAC Channel 2 
+File Type        : SUB2D 
+Target           : Upper Sco stars 
+Radius Used      : r 10, rIn 12, rOut 20 
+Problem AORs     : 13867776 13868800 13869824 13870080 13871360 13872384 13873664 13875712 13875968 13877248 13861632 13866752 13867008 13867520 13868544 13869056 13869312 13870336 13870592 13870848 13871104 13871616 13871872 13872640 13872896 13873152 13873408 13874432 13875200 13876736 13866240 13867264 13869568 13872128 13873920 13874176 13874688 13874944 13875456 13876224 13876480 13876992 13877504 13877760 13878016 13866496 13868032 13868288 
+Comments         : New terminal structure testing with Uppersco stars that is subarray data from channel 2 and has multiple targets.

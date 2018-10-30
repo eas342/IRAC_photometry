@@ -1,0 +1,2 @@
+AORKEY,Target Coordinates,DateObs,Mission,Read Mode,Cycling DPattern,DScale,DPosition,FTime (sec),Time (MJD),Flux (mJy),Error (mJy),Spread (%),Outliers Rejected
+11638016,"270.62808754,  58.627265",2004-07-18T23:03:55.314,CRYO,FULL,NO,--,--,0.4,53204.9610569,643.6235585724746,4.084772821254835,0.6346524714407067,0

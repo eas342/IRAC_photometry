@@ -1,0 +1,8 @@
+Date Reduced : 2018-10-19T16:42:19.884240 
+Command Used : multiple deg;ngc2506_skyCrd.csv;bcd;NGC 2506;3;3;7;1;1.125;1.221;18;12;NGC 2420 cluster stars. Used a radius combination of (3,3,7)px. Not sure if it's a good idea but I didn't have any better option if I want to apply proper aperture correction. 
+Instrument   : IRAC Channel 1 
+File Type    : BCD 
+Target       : NGC 2506 
+Radius Used  : src_r-3, bkg_in-3, bkg_out-7 
+Problem AORs : 17133824 17133824 
+Comments     : NGC 2506 cluster stars. Used a radius combination of (3,3,7)px. Not sure if it's a good idea but I didn't have any better option if I want to apply proper aperture correction.
