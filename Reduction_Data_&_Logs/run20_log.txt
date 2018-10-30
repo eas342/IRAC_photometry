@@ -1,0 +1,8 @@
+Date Reduced     : 2018-10-30T12:58:44.447817 
+Input Parameters : {'run': '20', 'target': 'HD 165459', 'crdFormat': 'single_hms', 'aor_crd': ['/data1/phot_cal/spitzer/hd165459/cryo/r*', '18 02 30.7410086899 +58 37 38.157415821'], 'filetype': 'bcd', 'ap_corr': 1.0, 'comments': 'Testing the new terminal structure with hd 165459 cold mission data', 'ch_px': [1, 1.221], 'radius': [10, 12, 20], 'sigma': True} 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : HD 165459 
+Radius Used      : r 10, rIn 12, rOut 20 
+Problem AORs     : 24960256 24960512 25127680 25127936 27150336 27150592 
+Comments         : Testing the new terminal structure with hd 165459 cold mission data

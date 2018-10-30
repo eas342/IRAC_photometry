@@ -171,34 +171,34 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     
     #crdFormat
-    parser.add_argument('crdFormat', nargs = 1, help = 'A string that specifies format that specifies the format of target coordinate. It tells the unit of your coordinate and whether you want to work with one or more than one corrdinate. It can take in single_hms, single_deg, multiple_hms or multiple_hms as values. The values are not case sensitive.')
+    parser.add_argument('crdFormat', nargs = '?', type = str, default = 'single_hms', help = 'A string that specifies format that specifies the format of target coordinate. It tells the unit of your coordinate and whether you want to work with one or more than one corrdinate. It can take in single_hms, single_deg, multiple_hms or multiple_hms as values. The values are not case sensitive.')
     
     #aor_crd
-    parser.add_argument('aor_crd', nargs = '+', help = 'AOR filepaths and coordinates. It can be individual file path with a single coordinate or a text file containing those information. See github documentation for more on formatting and examples')
+    parser.add_argument('aor_crd', nargs = '+', type = str, help = 'AOR filepaths and coordinates. It can be individual file path with a single coordinate or a text file containing those information. Values must be strings. See github documentation for more on formatting and examples')
     
     #filetype
     parser.add_argument('-f', '--file-type', dest = 'filetype', nargs = '?', const = 'bcd', default = 'bcd', help = 'Which file type to use - bcd, cbcd, sub2d etc.')
     
     #radius combination
-    parser.add_argument('-r', '--radius', nargs = 3, default = [10, 12, 20], help = 'Radius combination. Takes 3 arguments, int or float. Source aperture radius, inner and outer background aperture radius.')
+    parser.add_argument('-r', '--radius', nargs = 3, default = [10, 12, 20], type = int, help = 'Radius combination. Source aperture radius, inner and outer background aperture radius.')
     
     #ap_corr
     parser.add_argument('-a', '--aperture-correction', dest = 'ap_corr', nargs = '?', const = 1.000, default = 1.000, type = float, help = 'Aperture correction for a particular radius combination. Proper values can be found from github documenation. Defaults to 1.0 when not specified')
     
     #channel + pixLen
-    parser.add_argument('-cp', '--ch-px', dest = 'ch_px', nargs = 2, default = [1, 1.221], help = 'Two arguments. Channel number and length of a pixel for that channel. defaults to channel 1 values.')
+    parser.add_argument('-cp', '--ch-px', dest = 'ch_px', nargs = 2, default = [1, 1.221], type = float, help = 'Two arguments. Channel number and length of a pixel for that channel. defaults to channel 1 values.')
     
     #Outlier Rejection
-    parser.add_argument('-o', '--outlier-rejection', dest = 'sigma', action = 'store_true', help = 'Whether you want outlier rejection or not')
+    parser.add_argument('-o', '--outlier-rejection', dest = 'sigma', action = 'store_true', help = 'Whether you want outlier rejection or not. Just the flag, no argument required.')
     
     #Run Number
-    parser.add_argument('-rn', '--run-number', dest = 'run', nargs = '?', const = 100, default = 100, help = 'Run number for naming output files')
+    parser.add_argument('-rn', '--run-number', dest = 'run', nargs = '?', const = '100', default = '100', help = 'Run number for naming output files')
     
     #Target Name
     parser.add_argument('-t', '--target-name', dest = 'target', nargs = '?', const = 'Many', default = 'Many', help = 'Name of target or targets. This will be included in the log file.')
     
     #Comments
-    parser.add_argument('-c', '--comments', nargs = argparse.REMAINDER, default = 'No comment was specified.', help = 'Comments about the run that will be included in the log file')
+    parser.add_argument('-c', '--comments', nargs = '?', type = str, default = 'No comment was specified.', help = 'Comments about the run that will be included in the log file')
     
     args = parser.parse_args()
     
@@ -212,49 +212,42 @@ def parse_arguments():
 
 if __name__=='__main__':
     
-    print('This is the new command line interface')
-    args = parse_arguments()
-    #pdb.set_trace()
-    """
     
     #Defining general constants
     #---------------------------
-
-    print '\n', 'Please input the following arguments and seperate them with a semi-colon(;)-- \n', '1. Coordinate format (e.g. single hms, single deg, multiple hms, multiple deg) \n', '2. AOR file path and coordinates (e.g. /data1/phot_cal/spitzer/hd165459/cryo/r*,18 02 30.7410086899 +58 37 38.157415821 \n', '3. File type (eg. bcd, cbcd, sub2d) \n', '4. Target Name (e.g. HD 165459, BD + 60 1753) \n','5. Source Aperture Radius in px (eg. 10) \n', '6. Inner Background Radius in px (eg. 12) \n', '7. Outer Background Radius in px (eg. 20) \n', '8. Channel# (1,2,3 or 4) \n', '9. Aperture Correction Factor (collect from iracinstrumenthandbook/27, e.g. 1.000) \n', '10. Length of a pixel in arcsec (e.g. 1.221 for ch1) \n', '11. Run# (For output file name. Should be an integer)\n', '12. Sigma Clipping Number (e.g. 10) \n', '13. Comments (to be included in the log) \n', 'Don\'t jump to any argument. e.g. You can\'t skip sigma to get to comments. comments must be the 14th argument. \n', 'You could however, use \'n/a\' for sigma if you don\'t want sigma clipping \n', 'Example command: single hms;/data1/phot_cal/spitzer/hd165459/cryo/r11638016,18 02 30.7410086899 +58 37 38.157415821;bcd;HD 165459;10;12;20;1;1.0;1.221;14;10;Your comment goes here. \n', '\n'
-
-    const_str = raw_input('Input the parameters listed above: ') 
-    constants = const_str.split(';')
-    print constants
-
-    crdFormat    = constants[0] 
-    aor_crd      = constants[1] if 'csv' in constants[1] else constants[1].split(',') 
-    filetype     = constants[2].lower()
-    r, rIn, rOut = int(constants[4]), int(constants[5]), int(constants[6])
-    channel      = int(constants[7])
-    ap_corr      = float(constants[8])
-    pixLen       = float(constants[9]) #arcsec
-    N            = constants[11] #For outlier rejection
+    args = parse_arguments()
+    crdFormat = args.crdFormat
+    aor_crd = args.aor_crd[0] if len(args.aor_crd)==1 else args.aor_crd
+    filetype = args.filetype
+    r, rIn, rOut = args.radius
+    ap_corr = args.ap_corr
+    ch, pix = args.ch_px
+    N = args.sigma
+    nRun = args.run
+    tName = args.target
+    comments = args.comments
+    
 
     #----------------------------
     
     #Generating & writing data tables to csv files
-    res, data, prob = run(crdFormat, aor_crd, channel, filetype, r, rIn, rOut, ap_corr, pixLen, N)
-    ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % constants[10], delimiter = ',', overwrite = True)
-    ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % constants[10], delimiter = ',', overwrite = True) 
+    res, data, prob = run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, int(ch), pix, N)
+    ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % nRun, delimiter = ',', overwrite = True)
+    ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % nRun, delimiter = ',', overwrite = True) 
+    
 
 
 
     #Writing a txt file that keeps log about this reduction run
     #----------------------------------------------------------
-    log = open('Reduction_Data_&_Logs/run%s_log.txt' % constants[10], 'w')
-    log.write("Date Reduced : %s \n" % datetime.now().isoformat())
-    log.write("Command Used : %s \n" % const_str)
-    log.write("Instrument   : IRAC Channel %i \n" % channel)
-    log.write("File Type    : %s \n" % filetype.upper())
-    log.write("Target       : %s \n" % constants[3])
-    log.write("Radius Used  : src_r-%i, bkg_in-%i, bkg_out-%i \n" % (r, rIn, rOut))
-    log.write("Problem AORs : " + ("%s "*len(prob) % tuple(prob)) + "\n")
-    log.write("Comments     : %s" % constants[12])
+    log = open('Reduction_Data_&_Logs/run%s_log.txt' % nRun, 'w')
+    log.write("Date Reduced     : %s \n" % datetime.now().isoformat())
+    log.write("Input Parameters : %s \n" % str(vars(args)))
+    log.write("Instrument       : IRAC Channel %i \n" % int(ch))
+    log.write("File Type        : %s \n" % filetype.upper())
+    log.write("Target           : %s \n" % tName)
+    log.write("Radius Used      : r %i, rIn %i, rOut %i \n" % (r, rIn, rOut))
+    log.write("Problem AORs     : " + ("%s "*len(prob) % tuple(prob)) + "\n")
+    log.write("Comments         : %s" % comments)
     log.close()
     #----------------------------------------------------------
-    """
