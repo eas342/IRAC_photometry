@@ -14,7 +14,7 @@ from datetime import datetime
 
 #Creating a table generating function that can be called from scripts
 #---------------------------------------------------------------------
-def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, N):
+def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, rejection = True):
     #initializing table to hold results
     result = Table(names = ('AORKEY', 'Target Coordinates', 'DateObs', 'Mission', 'Read Mode', 'Workable/Total Files in AOR', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S25', 'S5', 'S5', 'S10', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
@@ -129,7 +129,7 @@ def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, N)
         #Rejecting Outliers
         #...................
         sig = (np.std(corFlux)/np.std(corFlux))*100
-        if (N == 'n/a') | (len(corFlux)<=10) | (sig<2):
+        if (rejection == False) | (len(corFlux)<=10) | (sig<2):
             refFlux = corFlux
         else:
             refFlux = np.delete(corFlux, [np.argmin(corFlux), np.argmax(corFlux)])
@@ -189,10 +189,10 @@ def parse_arguments():
     parser.add_argument('-cp', '--ch-px', dest = 'ch_px', nargs = 2, default = [1, 1.221], type = float, help = 'Two arguments. Channel number and length of a pixel for that channel. defaults to channel 1 values.')
     
     #Outlier Rejection
-    parser.add_argument('-o', '--outlier-rejection', dest = 'sigma', action = 'store_true', help = 'Whether you want outlier rejection or not. Just the flag, no argument required.')
+    parser.add_argument('-o', '--outlier-rejection', dest = 'or', action = 'store_true', help = 'Whether you want outlier rejection or not. Just the flag, no argument required.')
     
-    #Run Number
-    parser.add_argument('-rn', '--run-number', dest = 'run', nargs = '?', const = '100', default = '100', help = 'Run number for naming output files')
+    #Run Name
+    parser.add_argument('-rn', '--run-name', dest = 'run', nargs = '?', const = '100', default = '100', help = 'Run number for naming output files')
     
     #Target Name
     parser.add_argument('-t', '--target-name', dest = 'target', nargs = '?', const = 'Many', default = 'Many', help = 'Name of target or targets. This will be included in the log file.')
@@ -222,7 +222,7 @@ if __name__=='__main__':
     r, rIn, rOut = args.radius
     ap_corr = args.ap_corr
     ch, pix = args.ch_px
-    N = args.sigma
+    rejection = args.or
     nRun = args.run
     tName = args.target
     comments = args.comments
@@ -231,7 +231,7 @@ if __name__=='__main__':
     #----------------------------
     
     #Generating & writing data tables to csv files
-    res, data, prob = run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, int(ch), pix, N)
+    res, data, prob = run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, int(ch), pix, rejection)
     ascii.write(res, 'Reduction_Data_&_Logs/run%s_aor_data.csv' % nRun, delimiter = ',', overwrite = True)
     ascii.write(data, 'Reduction_Data_&_Logs/run%s_img_data.csv' % nRun, delimiter = ',', overwrite = True) 
     
