@@ -26,8 +26,7 @@ This repository provides a pipeline that performs high-precision photometric red
   astropy, photutils, mirpyidl, tqdm
 
 - ### IDL programs
-  - [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/)
-  - [irac_aphot_corr_cryo.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorrcryo/)
+  [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/)
 
 
 ## Important Files In This Repository
@@ -48,7 +47,13 @@ This repository provides a pipeline that performs high-precision photometric red
   The pipeline itself does not generate plots. However, it holds all the plots I have made using data genarated from the pipeline. 
   
 - ### Correction_files (Folder)
-  This file contains the idl codes that I used to apply systematics and some correction images as fits files. 
+  This folder contains the idl codes that I used to apply systematics and some correction images as fits files. 
+  
+- ### aorcrd_files (Folder)
+  When reducing data for multiple targets using single or multiple AORs, the pipeline requires a csv file that lists AORs with corresponding target coordinates. In this folder, I keep all those csv files that the pipeline requires as input. More on the format and usage of these files can be found in the [How To Use](#how-to-use) section.
+  
+- ### Experiments (Folder)
+  Please ignore this folder. It contains my scrtach works and tests that I did before incorporating it into the pipeline.
 
 
 ## How To Use
