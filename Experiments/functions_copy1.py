@@ -127,7 +127,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         bcd_fn  = fn.replace('sub2d', 'bcd')
         bcd_hdu = fits.open(bcd_fn)
         bcd_hdr = bcd_hdu[0].header
-        bcd_img = bcd_hdu[0].data[31]
+        bcd_img = bcd_hdu[0].data[-1]
         bcd_hdu.close()
 
         Time = header['MJD_OBS']

@@ -115,7 +115,6 @@ def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, re
                     idl.execute('corFlux = IRAC_APHOT_CORR(obsFlux, cenX, cenY, ch)')
             corFlux = idl.getVariable('corFlux')
             corFlux = np.array([corFlux]) if type(corFlux)==float else np.array(corFlux).astype('Float64')
-            pdb.set_trace()
         else:
             problem.append(aKey)
             result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, np.nan, np.nan, np.nan, 0])
