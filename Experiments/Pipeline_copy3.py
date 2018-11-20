@@ -232,15 +232,15 @@ if __name__=='__main__':
     
     #Generating & writing data tables to csv files
     res, data, prob = run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, int(ch), pix, rejection)
-    ascii.write(res, 'Reduction_Data_&_Logs/%s_aor_data.csv' % nRun, delimiter = ',', overwrite = True)
-    ascii.write(data, 'Reduction_Data_&_Logs/%s_img_data.csv' % nRun, delimiter = ',', overwrite = True) 
+    ascii.write(res, '../Reduction_Data_&_Logs/%s_aor_data.csv' % nRun, delimiter = ',', overwrite = True)
+    ascii.write(data, '../Reduction_Data_&_Logs/%s_img_data.csv' % nRun, delimiter = ',', overwrite = True) 
     
 
 
 
     #Writing a txt file that keeps log about this reduction run
     #----------------------------------------------------------
-    log = open('Reduction_Data_&_Logs/run%s_log.txt' % nRun, 'w')
+    log = open('../Reduction_Data_&_Logs/run%s_log.txt' % nRun, 'w')
     log.write("Date Reduced     : %s \n" % datetime.now().isoformat())
     log.write("Input Parameters : %s \n" % str(vars(args)))
     log.write("Instrument       : IRAC Channel %i \n" % int(ch))
