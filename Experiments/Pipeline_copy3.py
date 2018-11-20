@@ -1,5 +1,5 @@
 import numpy as np
-import functions as func
+import functions_copy3 as func
 import pdb, glob, argparse
 import mirpyidl as idl
 from tqdm import tqdm
