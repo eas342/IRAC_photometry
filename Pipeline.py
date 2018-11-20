@@ -189,7 +189,7 @@ def parse_arguments():
     parser.add_argument('-cp', '--ch-px', dest = 'ch_px', nargs = 2, default = [1, 1.221], type = float, help = 'Two arguments. Channel number and length of a pixel for that channel. defaults to channel 1 values.')
     
     #Outlier Rejection
-    parser.add_argument('-o', '--outlier-rejection', dest = 'or', action = 'store_true', help = 'Whether you want outlier rejection or not. Just the flag, no argument required.')
+    parser.add_argument('-o', '--outlier-rejection', dest = 'outlier', action = 'store_true', help = 'Whether you want outlier rejection or not. Just the flag, no argument required.')
     
     #Run Name
     parser.add_argument('-rn', '--run-name', dest = 'run', nargs = '?', const = '100', default = '100', help = 'Run number for naming output files')
@@ -222,7 +222,7 @@ if __name__=='__main__':
     r, rIn, rOut = args.radius
     ap_corr = args.ap_corr
     ch, pix = args.ch_px
-    rejection = args.or
+    rejection = args.outlier
     nRun = args.run
     tName = args.target
     comments = args.comments
