@@ -16,7 +16,7 @@ from datetime import datetime
 #---------------------------------------------------------------------
 def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, rejection = True):
     #initializing table to hold results
-    result = Table(names = ('AORKEY', 'Target Coordinates', 'DateObs', 'Mission', 'Read Mode', 'Workable/Total Files in AOR', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'S25', 'S25', 'S5', 'S5', 'S10', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
+    result = Table(names = ('AORKEY', 'Target RA', 'Target Dec', 'DateObs', 'Mission', 'Read Mode', 'Workable/Total Files in AOR', 'Cycling DPattern', 'DScale', 'DPosition', 'FTime (sec)', 'Time (MJD)', 'Flux (mJy)', 'Error (mJy)', 'Spread (%)', 'Outliers Rejected'), dtype = ('i4', 'f8', 'f8', 'S25', 'S5', 'S5', 'S10', 'S5', 'S10', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'i4'))
 
 
     problem = []
@@ -46,7 +46,7 @@ def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, re
         aorList  = [glob.glob(aor + '/ch%i/bcd/*_%s.fits' % (channel, filetype)) for aor in AORs]
         
     else:
-        print('Please input one of these 4 values for crdFormat: single hms, single deg, multiple hms, multiple deg')
+        print('Please input one of these 4 values for crdFormat: single_hms, single_deg, multiple_hms, multiple_deg')
         return
     #..........................................................
     
@@ -86,7 +86,8 @@ def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, re
         mssn = 'CRYO' if (time<=54968) else 'WARM'                   #Spitzer mission
         mode = header['READMODE']                                    #Readout mode: full or sub
         fLen = '%i/%i' % (len(Res_Flux), len(aor))                   #workable file/total file
-        tCrd = str(sky).replace(')','(').split('(')[-2]              #Target coordinate
+        tRA  = sky.ra.deg                                            #Target RA
+        tDEC = sky.dec.deg
         try:
             dScl = header['DITHSCAL']                                #Dither scale: small, medium or large
         except KeyError:
@@ -120,7 +121,7 @@ def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, re
             corFlux = np.array([corFlux]) if type(corFlux)==float else np.array(corFlux).astype('Float64')
         else:
             problem.append(aKey)
-            result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, np.nan, np.nan, np.nan, 0])
+            result.add_row([aKey, tRA, tDEC, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, np.nan, np.nan, np.nan, 0])
             continue
         #.................................
         
@@ -154,7 +155,7 @@ def run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, channel, pixLen, re
         #........................
 
         
-        result.add_row([aKey, tCrd, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, flux, error, spread, clipped])
+        result.add_row([aKey, tRA, tDEC, dObs, mssn, mode, fLen, dPat, dScl, dPos, fTim, time, flux, error, spread, clipped])
     
     return result, cum_data, problem
 

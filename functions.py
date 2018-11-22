@@ -98,21 +98,28 @@ def gen_center_g2d(image, center_x, center_y, box_width, amp, x_std, y_std, Thet
     return new_xCen, new_yCen, fwhm_x, fwhm_y
 
 
+def ap_overflow(x, y, r, img):
+    xlim, ylim = img.shape
+    if ((x+r)>xlim) | ((x-r)<0) | ((y+r)>ylim) | ((y-r)<0):
+        return True
+    else:
+        return False
+
 
 def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
     """
     For a set of images.
     """
     
-    data = Table(names = ('File#', 'Coord Conversion Issue', 'Centroiding Issue', 'Bad Center Guess', 'Not In FOV', 'Xc', 'Yc', 'Fx', 'Fy', 'Time[MJD]', 'Raw_Flux', 'Bkg_Flux', 'Res_Flux'), 
-                 dtype = ('S25', 'S5', 'S5', 'S5', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8'))
+    data = Table(names = ('File#', 'Coord Conversion Issue', 'Centroiding Issue', 'Bad Center Guess', 'Not In FOV', 'Ap Out Of Bound', 'Xc', 'Yc', 'Fx', 'Fy', 'Time[MJD]', 'Raw_Flux', 'Bkg_Flux', 'Res_Flux'), 
+                 dtype = ('S25', 'S5', 'S5', 'S5', 'S5', 'S5', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8'))
 
 
     for i, fn in tqdm(enumerate(fnames)):
         
         #Issues list
         #Initializing values to False
-        (crd_conversion, centroiding, bad_cen_guess, not_in_fov) = ('X', 'X', 'X', 'X')
+        (crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound) = ('X', 'X', 'X', 'X', 'X')
         
         #setting default value to NaN
         (raw_flux, bkg_flux, res_flux, cenX, cenY, fx, fy) = (np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
@@ -129,7 +136,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
             pix = targetCrd.to_pixel(w)
         except (ValueError, NoConvergence):
             crd_conversion = 'O'
-            data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
+            data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
             continue
 
         if (pix[0]>0) & (pix[0]<256) & (pix[1]>0) & (pix[1]<256):
@@ -138,7 +145,12 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
                 cenX, cenY, fx, fy = gen_center_g2d(image, pix[0], pix[1], 7, 5, 4, 4, 0)
             except TypeError:
                 centroiding = 'O'
-                data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
+                data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
+                continue
+            
+            if (ap_overflow(cenX, cenY, bkg_rIn, image) == True) | (ap_overflow(cenX, cenY, bkg_rOut, image) == True):
+                ap_out_of_bound = 'O'
+                data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
                 continue
 
             if (np.abs(cenX - pix[0]) <= 2) & (np.abs(cenY-pix[1]) <= 2):
@@ -160,7 +172,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         else:
             not_in_fov = 'O'
             
-        data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
+        data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
         
     return data, header
 
