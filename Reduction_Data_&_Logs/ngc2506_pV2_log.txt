@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-27T11:49:43.276049 
+Input Parameters : {'run': 'ngc2506_pV2', 'target': 'NGC2506', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/ngc2506_skyCrd.csv'], 'filetype': 'bcd', 'ap_corr': 1.0, 'comments': 'Running Pipeline Version 2 for NGC 2506 stars', 'ch_px': [1, 1.221], 'radius': [10, 12, 20]} 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : NGC2506 
+Radius Used      : r 10, rIn 12, rOut 20 
+Problem AORs     : 17133824 17133824 
+Comments         : Running Pipeline Version 2 for NGC 2506 stars

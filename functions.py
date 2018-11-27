@@ -124,10 +124,20 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         #setting default value to NaN
         (raw_flux, bkg_flux, res_flux, cenX, cenY, fx, fy) = (np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
         
+        #Extracting header and image data regardless of filetype
         hdu    = fits.open(fn)
         header = hdu[0].header
         image  = hdu[0].data
         hdu.close()
+        
+        #Extracting header and image data of bcd files for subarray data
+        if header['READMODE'] == 'SUB':
+            bcd_fn     = fn.replace('sub2d', 'bcd')
+            bcd_hdu    = fits.open(bcd_fn)
+            bcd_header = bcd_hdu[0].header
+            bcd_image  = bcd_hdu[0].data
+            image = np.median(bcd_image[14:], axis = 0) #taking a median of the last 50 bcd frames
+            bcd_hdu.close()
 
         Time = header['MJD_OBS']
         

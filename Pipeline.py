@@ -241,7 +241,7 @@ if __name__=='__main__':
 
     #Writing a txt file that keeps log about this reduction run
     #----------------------------------------------------------
-    log = open('Reduction_Data_&_Logs/run%s_log.txt' % nRun, 'w')
+    log = open('Reduction_Data_&_Logs/%s_log.txt' % nRun, 'w')
     log.write("Date Reduced     : %s \n" % datetime.now().isoformat())
     log.write("Input Parameters : %s \n" % str(vars(args)))
     log.write("Instrument       : IRAC Channel %i \n" % int(ch))

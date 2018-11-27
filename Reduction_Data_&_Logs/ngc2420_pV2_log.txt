@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-27T12:33:48.413646 
+Input Parameters : {'run': 'ngc2420_pV2', 'target': 'NGC2420', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/ngc2420_skyCrd.csv'], 'filetype': 'bcd', 'ap_corr': 1.0, 'comments': 'Running Pipeline Version 2 for NGC 2420 stars', 'ch_px': [1, 1.221], 'radius': [10, 12, 20]} 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : NGC2420 
+Radius Used      : r 10, rIn 12, rOut 20 
+Problem AORs     : 16272384 16272384 16272384 16272384 38111232 38111232 38111232 38111232 38111232 42490880 42490880 42490880 42490880 47021056 47021056 47021056 47021056 47021056 47021312 47021312 47021312 47021312 47021824 47021824 47021824 47021824 47021824 
+Comments         : Running Pipeline Version 2 for NGC 2420 stars
