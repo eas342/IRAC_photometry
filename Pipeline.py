@@ -247,7 +247,7 @@ if __name__=='__main__':
     log.write("Instrument       : IRAC Channel %i \n" % int(ch))
     log.write("File Type        : %s \n" % filetype.upper())
     log.write("Target           : %s \n" % tName)
-    log.write("Radius Used      : r %i, rIn %i, rOut %i \n" % (r, rIn, rOut))
+    log.write("Radius Used      : %i, %i, %i \n" % (r, rIn, rOut))
     log.write("Problem AORs     : " + ("%s "*len(prob) % tuple(prob)) + "\n")
     log.write("Comments         : %s" % comments)
     log.close()

@@ -119,7 +119,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         
         #Issues list
         #Initializing values to False
-        (crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound) = ('X', 'X', 'X', 'X', 'X')
+        (crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound) = ('N', 'N', 'N', 'N', 'N')
         
         #setting default value to NaN
         (raw_flux, bkg_flux, res_flux, cenX, cenY, fx, fy) = (np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
@@ -145,21 +145,21 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
             w = WCS(header)
             pix = targetCrd.to_pixel(w)
         except (ValueError, NoConvergence):
-            crd_conversion = 'O'
+            crd_conversion = 'Y'
             data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
             continue
 
-        if (pix[0]>0) & (pix[0]<256) & (pix[1]>0) & (pix[1]<256):
+        if (pix[0]>0) & (pix[0]<image.shape[0]) & (pix[1]>0) & (pix[1]<image.shape[0]):
             
             try:
                 cenX, cenY, fx, fy = gen_center_g2d(image, pix[0], pix[1], 7, 5, 4, 4, 0)
             except TypeError:
-                centroiding = 'O'
+                centroiding = 'Y'
                 data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
                 continue
             
             if (ap_overflow(cenX, cenY, bkg_rIn, image) == True) | (ap_overflow(cenX, cenY, bkg_rOut, image) == True):
-                ap_out_of_bound = 'O'
+                ap_out_of_bound = 'Y'
                 data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
                 continue
 
@@ -177,10 +177,11 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
                 res_flux  = raw_flux - bkg_flux
 
             else:
-                bad_cen_guess = 'O'
+                bad_cen_guess = 'Y'
 
         else:
-            not_in_fov = 'O'
+            not_in_fov = 'Y'
+            ap_out_of_bound = 'Y'
             
         data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
         

@@ -4,7 +4,7 @@ This repository provides a pipeline that performs high-precision photometric red
 
 ## Contents
 - [Dependencies](#dependencies)
-- [Important Files In This Repository](#important-files-in-this-repository)
+- [Contents Of This Repository](#contents-of-this-repository)
 - [How To Use](#how-to-use)
   - [From Script](#from-script)
   - [From Terminal](#from-terminal)
@@ -35,22 +35,22 @@ This repository provides a pipeline that performs high-precision photometric red
   - [irac_aphot_corr.pro](http://irsa.ipac.caltech.edu/data/SPITZER/docs/dataanalysistools/tools/contributed/irac/iracaphotcorr/)
 
 
-## Important Files In This Repository
+## Contents Of This Repository
 
 - ### Pipeline.py
   This is the actual pipeline. You can run it directly from terminal or from another script. Its uses, inputs and outputs are discussed in a later section.
   
 - ### functions.py
-  This is a general library of functions. The pipeline is dependent on this file so, it has to be in the same folder as the pipeline.
+  This is a general library of functions that is used by the pipeline. The pipeline is dependent on this file so, it has to be in the same folder as the pipeline.
   
 - ### Reduction_Data_&_Logs (Folder)
   Data files generated from the pipeline are stored in this folder. Every time the pipeline is run, it generates 3 files:
-  - **\*_aor_data.csv**: These files provide the average flux per AOR and other important information for individual AORs such as aorkey, date of obsservation, dither information etc.
+  - **\*_aor_data.csv**: These files provide the average flux per AOR and other important information for individual AORs such as aorkey, date of observation, dither information etc.
   - **\*_img_data.csv**: These files provide flux from every single image from every AOR. It includes image specific information like source flux, gaussian fitted center position, FWHMs of fitted gaussian, problem in an image (if any) etc.
   - **\*_log.txt**: These files provide information about the run such as: date of run, target info, mission, instrument, radius used, terminal calling sequence etc.
   
 - ### General_Plots (Folder)
-  The pipeline itself does not generate plots. However, it holds all the plots I have made using data genarated from the pipeline. 
+  The pipeline itself does not generate plots. However, it holds all the plots I made using data genarated from the pipeline. 
   
 - ### Correction_files (Folder)
   This folder contains the idl codes that I used to apply systematics and some correction images as fits files. 
@@ -59,7 +59,7 @@ This repository provides a pipeline that performs high-precision photometric red
   When reducing data for multiple targets using single or multiple AORs, the pipeline requires a csv file that lists AORs with corresponding target coordinates. In this folder, I keep all those csv files that the pipeline requires as input. More on the format and usage of these files can be found in the [How To Use](#how-to-use) section.
   
 - ### Experiments (Folder)
-  Please ignore this folder. It contains my scrtach works and tests that I did before incorporating various pieces of code into the pipeline.
+  Please ignore this folder. It contains my scrtach work and tests that I did before incorporating various pieces of code into the pipeline.
 
 
 ## How To Use
@@ -74,9 +74,10 @@ This repository provides a pipeline that performs high-precision photometric red
     The input parameters and outputs are discussed below.
     
   - #### Input Parameters
-    - **crdFormat**: A string that specifies the format of target coordinates and the plurality of targets. It can take on one of these 4 possible values: 'single_hms', 'single_deg', 'multiple_hms' or, 'multiple_deg'. The value of *crdFormat* will affect the next imput parameter, *aor_crd*.
+    - **crdFormat**: A string that specifies the format of target coordinates and the plurality of targets. It can take on one of these 4 possible values: 'single_hms', 'single_deg', 'multiple_hms' or, 'multiple_deg'. The value of *crdFormat* will affect the next imput parameter, *aor_crd*. 
+       
     - **aor_crd**: This parameter specifies the AORs and targets you want to work with. The value of this parameter depends on *crdFormat* and so I need to break it down into 4 parts.
-      - crdFormat = 'single_hms' :
+      - If crdFormat = 'single_hms', aor_crd is going to be a *list* with two items: ['', 'hh mm ss ddd mm ss']
       - crdFormat = 'single_deg' :
       - crdFormat = 'multiple_hms' :
       - crdFormat = 'multiple_deg' :A 2D _list/array_ that contains the filenames of desired files. For examples, if you want to work with 2 AORs that have 2 and 3 BCD files respectively, the list would look something like:

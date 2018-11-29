@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-29T10:35:28.516248 
+Input Parameters : {'run': 'ngc2506_337', 'target': 'NGC2506 solar analogs', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/ngc2506_skyCrd.csv'], 'filetype': 'bcd', 'ap_corr': 1.125, 'comments': 'Corrrecting for radius combination. The ngc2506_pV2 run was done with 10 12 20 combination but since these are stars in a crowded field, we are redoing this set with a smaller radius combination.', 'ch_px': [1, 1.221], 'radius': [3, 3, 7]} 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : NGC2506 solar analogs 
+Radius Used      : 3, 3, 7 
+Problem AORs     : 17133824 17133824 
+Comments         : Corrrecting for radius combination. The ngc2506_pV2 run was done with 10 12 20 combination but since these are stars in a crowded field, we are redoing this set with a smaller radius combination.
