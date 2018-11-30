@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-27T11:57:56.633940 
+Input Parameters : {'run': 'upperSco_pV2', 'target': 'Upper Sco Stars', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/upperSco_skyCrd.csv'], 'filetype': 'sub2d', 'ap_corr': 1.06, 'comments': 'Running Pipeline version 2 for Upper Sco Stars', 'ch_px': [2.0, 1.213], 'radius': [5, 5, 10]} 
+Instrument       : IRAC Channel 2 
+File Type        : SUB2D 
+Target           : Upper Sco Stars 
+Radius Used      : r 5, rIn 5, rOut 10 
+Problem AORs     : 13867776 13868800 13869824 13870080 13871360 13872384 13873664 13875712 13875968 13877248 13861632 13866752 13867008 13867520 13868544 13869056 13869312 13870336 13870592 13870848 13871104 13871616 13871872 13872640 13872896 13873152 13873408 13874432 13875200 13876736 13866240 13867264 13869568 13872128 13873920 13874176 13874688 13874944 13875456 13876224 13876480 13876992 13877504 13877760 13878016 13866496 13868032 13868288 
+Comments         : Running Pipeline version 2 for Upper Sco Stars

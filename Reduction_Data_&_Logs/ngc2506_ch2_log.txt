@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-29T10:39:57.730088 
+Input Parameters : {'run': 'ngc2506_ch2', 'target': 'NGC2506 solar analogs', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/ngc2506_skyCrd.csv'], 'filetype': 'bcd', 'ap_corr': 1.12, 'comments': 'All the same settings for ngc stars but for channel 2.', 'ch_px': [2.0, 1.213], 'radius': [3, 3, 7]} 
+Instrument       : IRAC Channel 2 
+File Type        : BCD 
+Target           : NGC2506 solar analogs 
+Radius Used      : 3, 3, 7 
+Problem AORs     : 17133824 
+Comments         : All the same settings for ngc stars but for channel 2.

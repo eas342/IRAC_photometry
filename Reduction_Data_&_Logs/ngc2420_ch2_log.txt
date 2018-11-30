@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-29T12:26:15.929627 
+Input Parameters : {'run': 'ngc2420_ch2', 'target': 'NGC2420 solar analogs', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/ngc2420_skyCrd.csv'], 'filetype': 'bcd', 'ap_corr': 1.12, 'comments': 'All the same settings for ngc stars but for channel 2.', 'ch_px': [1, 1.221], 'radius': [3, 3, 7]} 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : NGC2420 solar analogs 
+Radius Used      : 3, 3, 7 
+Problem AORs     : 16272384 16272384 16272384 16272384 38111232 38111232 38111232 38111232 38111232 42490880 42490880 42490880 42490880 47021056 47021056 47021056 47021056 47021056 47021312 47021312 47021312 47021312 47021824 47021824 47021824 47021824 47021824 
+Comments         : All the same settings for ngc stars but for channel 2.
