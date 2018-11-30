@@ -1,0 +1,8 @@
+Date Reduced     : 2018-11-29T12:26:07.701274 
+Input Parameters : {'run': 'ngc2420_337', 'target': 'NGC2420 solar analogs', 'outlier': True, 'crdFormat': 'multiple_deg', 'aor_crd': ['aorcrd_files/ngc2420_skyCrd.csv'], 'filetype': 'bcd', 'ap_corr': 1.125, 'comments': 'Corrrecting for radius combination. The ngc2420_pV2 run was done with 10 12 20 combination but since these are stars in a crowded field, we are redoing this set with a smaller radius combination.', 'ch_px': [1, 1.221], 'radius': [3, 3, 7]} 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : NGC2420 solar analogs 
+Radius Used      : 3, 3, 7 
+Problem AORs     : 16272384 16272384 16272384 16272384 38111232 38111232 38111232 38111232 38111232 42490880 42490880 42490880 42490880 47021056 47021056 47021056 47021056 47021056 47021312 47021312 47021312 47021312 47021824 47021824 47021824 47021824 47021824 
+Comments         : Corrrecting for radius combination. The ngc2420_pV2 run was done with 10 12 20 combination but since these are stars in a crowded field, we are redoing this set with a smaller radius combination.
