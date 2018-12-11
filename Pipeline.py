@@ -193,7 +193,7 @@ def parse_arguments():
     parser.add_argument('-o', '--outlier-rejection', dest = 'outlier', action = 'store_true', help = 'Whether you want outlier rejection or not. Just the flag, no argument required.')
     
     #Run Name
-    parser.add_argument('-rn', '--run-name', dest = 'run', nargs = '?', const = '100', default = '100', help = 'Run number for naming output files')
+    parser.add_argument('-rn', '--run-name', dest = 'run', nargs = '?', const = 'Test_run', default = 'Test_run', help = 'Run number for naming output files')
     
     #Target Name
     parser.add_argument('-t', '--target-name', dest = 'target', nargs = '?', const = 'Many', default = 'Many', help = 'Name of target or targets. This will be included in the log file.')
