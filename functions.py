@@ -147,7 +147,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         except (ValueError, NoConvergence):
             crd_conversion = 'Y'
             data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
-            continue
+            continue   
 
         if (pix[0]>0) & (pix[0]<image.shape[0]) & (pix[1]>0) & (pix[1]<image.shape[1]):
             
@@ -157,6 +157,9 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
                 centroiding = 'Y'
                 data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
                 continue
+            
+            if (i==18) | (i==20):
+                pdb.set_trace() 
             
             if (ap_overflow(cenX, cenY, bkg_rIn, image) == True) | (ap_overflow(cenX, cenY, bkg_rOut, image) == True):
                 ap_out_of_bound = 'Y'
@@ -182,7 +185,7 @@ def single_target_phot(fnames, targetCrd, src_r, bkg_rIn, bkg_rOut):
         else:
             not_in_fov = 'Y'
             ap_out_of_bound = 'Y'
-            
+        
         data.add_row([i+1, crd_conversion, centroiding, bad_cen_guess, not_in_fov, ap_out_of_bound, cenX, cenY, fx, fy, Time, raw_flux, bkg_flux, res_flux])
         
     return data, header

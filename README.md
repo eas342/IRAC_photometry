@@ -81,7 +81,7 @@ This repository provides a pipeline that performs high-precision photometric red
       ```python
       import Pipeline as pipe
       crdFormat = 'single_hms'
-      aor_crd = ['/home/user/data/hd165459/r*', '18 02 30.7410086899 +58 37 38.157415821'] #wildcard provides every AOR in that directory
+      aor_crd = ['/home/user/data/hd165459/r*', '18 02 30.74 +58 37 38.15'] #wildcard provides every AOR in that directory
       aor_data, img_data, prob_aor = pipe.run(crdFormat, aor_crd, 'bcd', 10, 12, 20, 1.0, 1, 1.221)
       ```
       - crdFormat = 'single_deg', aor_crd is going to be a *list* with two items: `['path/to/aor', 'ra_in_deg dec_in_deg']`. This is the same as 'single_hms', the only difference being the coordinates have to be provided in degrees.
@@ -136,7 +136,7 @@ This repository provides a pipeline that performs high-precision photometric red
     - **aor_crd**: This parameter specifies the AORs and targets you want to work with. The value of this parameter depends on *crdFormat* and so I need to break it down into 4 parts. If:
       - crdFormat = 'single_hms', aor_crd must be 2 string arguments `'path/to/aor' 'hh mm ss dd mm ss'`. Using this option, you can either specify a single target for a single aor or a single target for multiple AORs. If you were to specify the same target for multiple AORs, you would have to use a wildcard in the filepath and your calling sequence would look something like:
       ```shell
-      python Pipeline.py 'single_hms' '/home/user/data/hd165459/r*' '18 02 30.7410086899 +58 37 38.157415821'
+      python Pipeline.py 'single_hms' '/home/user/data/hd165459/r*' '18 02 30.74 +58 37 38.15'
       ```
       - crdFormat = 'single_deg', This is the same as 'single_hms', the only difference being the coordinates have to be provided in degrees.
       - crdFormat = 'multiple_hms', aor_crd is going to be the filename of a csv file that contains two columns named "AOR Filepath" and "Target Coordinates". Both columns must have string datatype. Target coordinates must be in this format: 'hh mm ss dd mm ss'. With this option, you can specify multiple targets for multiple AORs and multiple targets for single AOR. You could also do single target for multiple AOR and single target for single AOR but that would be redundant because you could do them with the 'single_hms' option which saves you the trouble of making a csv file. You can check the "aorcrd_files" folder in this repository, to find examples of these csv files. If you wanted to test with one of the csv files in that folder, you calling sequence would look like:
