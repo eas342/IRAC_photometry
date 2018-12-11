@@ -46,5 +46,5 @@ echo "---------"
 echo "Comments"
 echo "---------"
 echo
-grep "Radius Used" *.txt
+grep "Comments" *.txt
 echo
