@@ -227,9 +227,19 @@ if __name__=='__main__':
     nRun = args.run
     tName = args.target
     comments = args.comments
-    
-
     #----------------------------
+    
+    
+    
+    
+    # Displaying command nicely
+    #----------------------------
+    rej = '-o' if (rejection==True) else ''
+    ac = aor_crd if (type(aor_crd)==str) else "%s' '%s" % (aor_crd[0], aor_crd[1])
+    command = "python Pipeline.py '%s' '%s' -f '%s' -r %i %i %i -a %f -cp %i %f %s -rn '%s' -t '%s' -c '%s'" % (crdFormat, ac, filetype, r, rIn, rOut, ap_corr, int(ch), pix, rej, nRun, tName, comments)
+    #----------------------------
+    
+    
     
     #Generating & writing data tables to csv files
     res, data, prob = run(crdFormat, aor_crd, filetype, r, rIn, rOut, ap_corr, int(ch), pix, rejection)
@@ -243,7 +253,7 @@ if __name__=='__main__':
     #----------------------------------------------------------
     log = open('Reduction_Data_&_Logs/%s_log.txt' % nRun, 'w')
     log.write("Date Reduced     : %s \n" % datetime.now().isoformat())
-    log.write("Input Parameters : %s \n" % str(vars(args)))
+    log.write("Input Parameters : %s \n" % command)
     log.write("Instrument       : IRAC Channel %i \n" % int(ch))
     log.write("File Type        : %s \n" % filetype.upper())
     log.write("Target           : %s \n" % tName)
