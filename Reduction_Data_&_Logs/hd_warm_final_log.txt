@@ -1,0 +1,8 @@
+Date Reduced     : 2018-12-13T15:55:20.088244 
+Input Parameters : python Pipeline.py 'single_hms' '/data1/phot_cal/spitzer/hd165459/warm/r*' '18 02 30.7410086899 +58 37 38.157415821' -f 'bcd' -r 10 12 20 -a 1.000000 -cp 1 1.221000 -o -rn 'hd_warm_final' -t 'HD 165459' -c 'Running the latest version of pipeline on HD 165459 warm mission data. Default input parameters were used.' 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : HD 165459 
+Radius Used      : 10, 12, 20 
+Problem AORs     : 41587712 41587968 41588224 41588480 41588736 45709056 45709312 45709568 
+Comments         : Running the latest version of pipeline on HD 165459 warm mission data. Default input parameters were used.
