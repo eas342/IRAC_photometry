@@ -1,32 +1,50 @@
 #!/bin/sh
 
+echo "-------------"
+echo "Date Reduced"
+echo "-------------"
 echo
-echo
-echo 'Would you like to see the list of field names? (y/n)'
-read List
-echo
-
-if [ "$List" = "y" ]; then
-    echo
-    echo "The possible field names are:"
-    echo "------------------------------"
-    echo "1. Date Reduced"
-    echo "2. Input Parameters"
-    echo "3. Instrument"
-    echo "4. File Type"
-    echo "5. Target"
-    echo "6. Radius Used"
-    echo "7. Problem AORs"
-    echo "8. Comments"
-    echo "Names are case sensitive and must be spelled correctly."
-    echo
-fi
-
-echo
-echo 'Input the field name you would like to see for every run:'
-read Name
+grep "Date Reduced" *.txt
 echo
 
+echo "------------------"
+echo "Input Parameters"
+echo "------------------"
 echo
-grep "$Name" *.txt
+grep "Input Parameters" *.txt
+echo
+
+echo "-----------"
+echo "Instrument"
+echo "-----------"
+echo
+grep "Instrument" *.txt
+echo
+
+echo "----------"
+echo "File Type"
+echo "----------"
+echo
+grep "File Type" *.txt
+echo
+
+echo "-------"
+echo "Target"
+echo "-------"
+echo
+grep "Target" *.txt
+echo
+
+echo "------------"
+echo "Radius Used"
+echo "------------"
+echo
+grep "Radius Used" *.txt
+echo
+
+echo "---------"
+echo "Comments"
+echo "---------"
+echo
+grep "Comments" *.txt
 echo

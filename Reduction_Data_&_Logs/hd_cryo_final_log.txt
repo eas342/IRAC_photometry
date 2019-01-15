@@ -1,0 +1,8 @@
+Date Reduced     : 2018-12-13T15:34:10.761558 
+Input Parameters : python Pipeline.py 'single_hms' '/data1/phot_cal/spitzer/hd165459/cryo/r*' '18 02 30.7410086899 +58 37 38.157415821' -f 'bcd' -r 10 12 20 -a 1.000000 -cp 1 1.221000 -o -rn 'hd_cryo_final' -t 'HD 165459' -c 'Running the latest version of pipeline on HD 165459 cryogenic mission data. Default input parameters were used.' 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : HD 165459 
+Radius Used      : 10, 12, 20 
+Problem AORs     : 24960256 24960512 25127680 25127936 27150336 27150592 
+Comments         : Running the latest version of pipeline on HD 165459 cryogenic mission data. Default input parameters were used.

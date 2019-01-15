@@ -1,0 +1,8 @@
+Date Reduced     : 2018-12-13T16:08:45.176297 
+Input Parameters : python Pipeline.py 'multiple_deg' 'aorcrd_files/ngc2420_skyCrd.csv' -f 'bcd' -r 3 3 7 -a 1.125000 -cp 1 1.221000 -o -rn 'ngc2420_final' -t 'NGC2420 Solar Analogs' -c 'Running the latest version of pipeline on NGC2420 stars. radius combination and aperture correction factor is different from default.' 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : NGC2420 Solar Analogs 
+Radius Used      : 3, 3, 7 
+Problem AORs     : 16272384 16272384 16272384 16272384 38111232 38111232 38111232 38111232 38111232 42490880 42490880 42490880 42490880 47021056 47021056 47021056 47021056 47021056 47021312 47021312 47021312 47021312 47021824 47021824 47021824 47021824 47021824 
+Comments         : Running the latest version of pipeline on NGC2420 stars. radius combination and aperture correction factor is different from default.

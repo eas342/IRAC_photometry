@@ -1,0 +1,8 @@
+Date Reduced     : 2018-12-13T16:05:59.257117 
+Input Parameters : python Pipeline.py 'single_hms' '/data1/phot_cal/spitzer/bd601753/warm/r*' '17 24 52.2772360943 +60 25 50.780790994' -f 'bcd' -r 10 12 20 -a 1.000000 -cp 1 1.221000 -o -rn 'bd_warm_final' -t 'BD +60 1753' -c 'Running the latest version of pipeline on BD +60 1753 warm mission data. Default input parameters were used.' 
+Instrument       : IRAC Channel 1 
+File Type        : BCD 
+Target           : BD +60 1753 
+Radius Used      : 10, 12, 20 
+Problem AORs     : 44641024 44641280 44642816 44643072 45436928 45437184 45437440 45437696 45437952 45438208 45438464 45438720 45438976 45439232 45711104 46065664 46065920 46066688 46066944 46067712 46067968 
+Comments         : Running the latest version of pipeline on BD +60 1753 warm mission data. Default input parameters were used.
